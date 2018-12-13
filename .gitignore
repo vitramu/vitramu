@@ -1,0 +1,27 @@
+### build related ###
+out/
+bin
+build/
+
+
+### Editor related ###
+.vscode
+
+### Gradle related ###
+.gradle
+gradle-wrapper.jar
+
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
