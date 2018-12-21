@@ -1,6 +1,9 @@
 package org.vitramu.engine.definition;
 
+import javafx.concurrent.Task;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FlowDefinition extends AbstractDefinition {
 
@@ -27,5 +30,9 @@ public class FlowDefinition extends AbstractDefinition {
     public List<SequenceDefinition> findSequenceByTarget(GatewayDefinition gateway) {
         // TODO
         return null;
+    }
+
+    public boolean hasTask(String taskId) {
+        return tasks.stream().map(TaskDefinition::getId).collect(Collectors.toSet()).contains(taskId);
     }
 }
