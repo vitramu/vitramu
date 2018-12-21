@@ -11,6 +11,11 @@ repositories {
     mavenCentral()
 }
 
+lombok {
+    version = "${lombok_version}"
+    sha256 = ""
+}
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    testCompile group: 'junit', name: 'junit', version: '${junit_version}'
 }
