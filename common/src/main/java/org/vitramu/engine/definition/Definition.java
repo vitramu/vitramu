@@ -1,6 +1,8 @@
 package org.vitramu.engine.definition;
 
 
+import org.vitramu.engine.definition.element.DefinitionType;
+
 public interface Definition {
 
     /**
@@ -14,5 +16,5 @@ public interface Definition {
     /**
      * Get type of current Definition Object.
      * */
-    Type getType();
+    DefinitionType getType();
 }

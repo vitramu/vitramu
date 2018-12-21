@@ -1,9 +1,13 @@
 package org.vitramu.engine.definition;
 
+import lombok.AllArgsConstructor;
+import org.vitramu.engine.definition.element.DefinitionType;
+
+@AllArgsConstructor
 public abstract class AbstractDefinition implements Definition {
-    protected String id;
-    protected String name;
-    protected Type type;
+    protected final String id;
+    protected final String name;
+    protected final DefinitionType type;
 
     @Override
     public String getId() {
@@ -16,7 +20,7 @@ public abstract class AbstractDefinition implements Definition {
     }
 
     @Override
-    public Type getType() {
-        return type;
+    public DefinitionType getType() {
+        return this.type;
     }
 }
