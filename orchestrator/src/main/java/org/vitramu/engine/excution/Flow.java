@@ -7,6 +7,7 @@ import org.vitramu.engine.definition.element.GatewayDefinition;
 import org.vitramu.engine.definition.element.SequenceDefinition;
 import org.vitramu.engine.excution.element.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +17,9 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
     @NonNull
     @Getter
     private String instanceId;
-    private List<Task> tasks;
-    private List<Gateway> gateways;
-    private List<Sequence> sequences;
+    private List<Task> tasks = new ArrayList<>();
+    private List<Gateway> gateways = new ArrayList<>();
+    private List<Sequence> sequences = new ArrayList<>();
     @Getter
     private String startServiceName;
     @Getter
