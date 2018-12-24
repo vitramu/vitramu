@@ -1,6 +1,4 @@
-package org.vitramu.engine.rest;
-
-import java.io.File;
+package org.vitramu.master.rest;
 
 /**
  * FlowDefinitionController contains rest api like submitting flow definition, binding task to service command and deploying flow definition.
@@ -10,14 +8,14 @@ public class FlowDefinitionController {
 
     /**
      * @param definition {String} definition written in json
-     * @return definition id assigned by master
+     * @return definition id assigned by engine
      */
     public String createDefinition(String definition) {
         return null;
     }
 
     /**
-     * @param definitionId {String} definition id assigned by master when creating definition
+     * @param definitionId {String} definition id assigned by engine when creating definition
      * @param definition {String} definition described in json
      */
     public void updateDefinition(String definitionId, String definition) {

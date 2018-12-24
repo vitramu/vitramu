@@ -33,19 +33,33 @@ public class FlowDefinition extends AbstractDefinition {
         gateways.addAll(gatewayDefinitions);
     }
 
+    public Optional<TaskDefinition> findTaskDefinition(String taskId) {
+        return this.tasks.stream().filter(td->td.getId().equals(taskId)).findFirst();
+    }
+
+    public Optional<GatewayDefinition> findGatewayDefinition(String gatewayId) {
+        return this.gateways.stream().filter(gw->gw.getId().equals(gatewayId)).findFirst();
+    }
     public SequenceDefinition findSequenceByStart() {
         // TODO
         List<SequenceDefinition> seqList = sequences.stream().filter(seq -> seq.getSourceId().equals(start.getId())).collect(Collectors.toList());
-        if(seqList.size() > 0) {
+        if (seqList.size() > 0) {
             return seqList.get(0);
         }
         // TODO use exception
         return null;
     }
 
+    public List<SequenceDefinition> findSequenceBySource(@NonNull String elementId) {
+        return this.sequences.stream().filter(seq -> seq.getSourceId().equals(elementId)).collect(Collectors.toList());
+    }
+
     public List<SequenceDefinition> findSequenceBySource(TaskDefinition task) {
-        // TODO
-        return null;
+        return this.sequences.stream().filter(seq -> seq.getSourceId().equals(task.getId())).collect(Collectors.toList());
+    }
+
+    public List<SequenceDefinition> findSequenceByTarget(@NonNull String elementId) {
+        return sequences.stream().filter(seq -> seq.getTargetId().equals(elementId)).collect(Collectors.toList());
     }
 
     public List<SequenceDefinition> findSequenceByTarget(TaskDefinition task) {
@@ -72,7 +86,7 @@ public class FlowDefinition extends AbstractDefinition {
         return this;
     }
 
-    public FlowDefinition connect(@NonNull String sequenceId,@NonNull String sourceId, @NonNull String targetId) {
+    public FlowDefinition connect(@NonNull String sequenceId, @NonNull String sourceId, @NonNull String targetId) {
         // TODO whether sequence already exist
 
         Map<String, DefinitionType> elementTypeMap = new HashMap<>();
@@ -84,14 +98,14 @@ public class FlowDefinition extends AbstractDefinition {
         );
 
         DefinitionType sourceType = null;
-        if(start.getId().equals(sourceId)) {
+        if (start.getId().equals(sourceId)) {
             sourceType = start.getType();
         } else {
             sourceType = elementTypeMap.get(sourceId);
         }
 
         DefinitionType targetType = null;
-        if(end.getId().equals(targetId)) {
+        if (end.getId().equals(targetId)) {
             targetType = end.getType();
         } else {
             targetType = elementTypeMap.get(targetId);
@@ -109,16 +123,17 @@ public class FlowDefinition extends AbstractDefinition {
         private String name;
 
         public FlowDefinitionBuilder id(@NonNull String id) {
-            this.id=id;
+            this.id = id;
             return this;
         }
+
         public FlowDefinitionBuilder name(@NonNull String name) {
-            this.name= name;
+            this.name = name;
             return this;
         }
 
         public FlowDefinition build() {
-            FlowDefinition flowDefinition = new FlowDefinition(id,name, start,end, tasks, gateways);
+            FlowDefinition flowDefinition = new FlowDefinition(id, name, start, end, tasks, gateways);
             return flowDefinition;
         }
     }

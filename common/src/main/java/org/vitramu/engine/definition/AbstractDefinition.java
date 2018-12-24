@@ -2,7 +2,6 @@ package org.vitramu.engine.definition;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.vitramu.engine.definition.element.DefinitionType;
 
 @Getter

@@ -10,7 +10,6 @@ public abstract class AbstractExcutableInstance<T extends Definition> extends Ab
     @Getter
     protected Long finishedAt;
 
-
     public void start() {
         this.startedAt = System.currentTimeMillis();
     }

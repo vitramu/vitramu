@@ -3,7 +3,6 @@ package org.vitramu.engine.excution.element;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import org.vitramu.engine.definition.element.StartEventDefinition;
 import org.vitramu.engine.excution.AbstractInstance;
 import org.vitramu.engine.excution.Instance;

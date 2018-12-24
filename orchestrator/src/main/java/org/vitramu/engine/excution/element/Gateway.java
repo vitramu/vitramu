@@ -7,6 +7,7 @@ import org.vitramu.engine.excution.GatewayInstance;
 
 public abstract class Gateway extends AbstractExcutableInstance<GatewayDefinition> implements GatewayInstance {
 
+
     @Override
     public GatewayType getGatewayType() {
         return getDefinition().getGatewayType();

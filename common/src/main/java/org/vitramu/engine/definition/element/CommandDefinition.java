@@ -3,7 +3,7 @@ package org.vitramu.engine.definition.element;
 import org.vitramu.engine.definition.AbstractDefinition;
 
 /**
- * CommandDefinition is a proxy  of CommandHandler implementation of downstream microservices in vitramu master.
+ * CommandDefinition is a proxy  of CommandHandler implementation of downstream microservices in vitramu engine.
  * */
 public class CommandDefinition extends AbstractDefinition {
 

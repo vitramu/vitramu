@@ -1,4 +1,4 @@
-package org.vitramu.engine.validator;
+package org.vitramu.master.validator;
 
 import org.vitramu.engine.definition.element.FlowDefinition;
 

@@ -1,6 +1,3 @@
 rootProject.name = 'vitramu'
 
-include ':master'
-include ':orchestrator'
-include ':agent'
-include ':common'
+include ':common', ':master',':orchestrator', ':agent'

@@ -1,7 +1,7 @@
-package org.vitramu.engine.validator.constraint;
+package org.vitramu.master.validator.constraint;
 
 import org.vitramu.engine.definition.element.FlowDefinition;
-import org.vitramu.engine.validator.DefinitionConstraint;
+import org.vitramu.master.validator.DefinitionConstraint;
 
 public class SingleStartConstraint implements DefinitionConstraint {
 

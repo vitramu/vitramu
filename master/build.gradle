@@ -1,21 +1,19 @@
 plugins {
-    id 'java'
+    id "org.springframework.boot"
 }
-
-group 'org.vitramu'
-
-sourceCompatibility = 1.8
 
 jar {
     baseName = 'vitramu-master'
-    version '1.0-SNAPSHOT'
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-cache'
+    compile 'org.springframework.boot:spring-boot-starter-json'
+    compile 'org.springframework.boot:spring-boot-starter-web-services'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
+
+
     compile project(":common")
 }

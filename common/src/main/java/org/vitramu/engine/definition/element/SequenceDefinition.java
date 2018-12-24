@@ -1,6 +1,5 @@
 package org.vitramu.engine.definition.element;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.vitramu.engine.definition.AbstractDefinition;
 

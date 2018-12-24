@@ -3,6 +3,7 @@ package org.vitramu.engine.excution;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -10,14 +11,14 @@ import org.vitramu.engine.definition.FlowDefinitionRepository;
 import org.vitramu.engine.definition.element.*;
 import org.vitramu.engine.excution.element.StartEvent;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static reactor.core.publisher.Mono.when;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class FlowServiceTest {
 
+    @Autowired
     private FlowService flowService;
 
     private FlowDefinition flowDefinition;
@@ -26,13 +27,17 @@ public class FlowServiceTest {
     private FlowDefinitionRepository flowDefinitionRepository;
     @MockBean
     private FlowRepository flowRepository;
+
+    private String flowInstanceId = "Instance-1";
+    private String flowDefinitionId = "F1";
+
     @Before
     public void setUp() {
-        flowService = new FlowService();
+        flowService = new FlowService(flowRepository, flowDefinitionRepository);
         flowDefinition = FlowDefinition.builder()
                 .id("F1")
                 .name("SimpleFlowDemo")
-                .start(new StartEventDefinition("S0","S0"))
+                .start(new StartEventDefinition("S0", "S0"))
                 .end(new EndEventDefinition("E0", "E0"))
                 .task(new TaskDefinition("T1", "RequestReceived"))
                 .task(new TaskDefinition("T2", "CreateOsbBooking"))
@@ -47,25 +52,30 @@ public class FlowServiceTest {
                 .connect("S3", "GW1", "T2")
                 .connect("S4", "GW1", "T3")
                 .connect("S5", "GW1", "T4")
-                .connect("S6",  "T2","GW2")
-                .connect("S7",  "T3","GW2")
+                .connect("S6", "T2", "GW2")
+                .connect("S7", "T3", "GW2")
                 .connect("S8", "T4", "GW2")
                 .connect("S9", "GW2", "T5")
                 .connect("S10", "T5", "E0");
 
     }
+
     @Test
     public void startFlowInstance() {
         when(flowRepository.isStarted(any())).thenReturn(false);
-        StartEvent startEvent =  StartEvent.builder()
-                .flowDefinitionId("F1")
+        when(flowDefinitionRepository.findFlowDefinitionById(any())).thenReturn(flowDefinition);
+        StartEvent startEvent = StartEvent.builder()
+                .flowDefinitionId(flowDefinitionId)
                 .parentFlowInstanceId(null)
-                .serviceInstanceId("S1")
+                .serviceInstanceId("Service1")
                 .serviceName("OSB")
-                .transactionId("Instance-1")
+                .transactionId(flowInstanceId)
                 .data("")
                 .build();
-        flowService.startFlowInstance(startEvent);
+        Flow flowInstance = flowService.startFlowInstance(startEvent);
+
+        when(flowRepository.findFlowInstanceById(any())).thenReturn(flowInstance);
+        flowService.completeTask(flowInstanceId, "T1");
     }
 
     @Test

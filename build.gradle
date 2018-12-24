@@ -1,15 +1,12 @@
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.14'
-    id 'java'
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
-
-group 'org.vitramu'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 // Hook to delete root project build directory
@@ -17,12 +14,37 @@ gradle.buildFinished {
     project.buildDir.deleteDir()
 }
 
-lombok {
-    version = "${lombok_version}"
-    sha256 = ""
+
+
+subprojects {
+    group 'org.vitramu'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    apply plugin: "java"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "io.franzbecker.gradle-lombok"
+
+    sourceCompatibility = 1.8
+
+    lombok {
+        version = "${lombok_version}"
+        sha256 = ""
+    }
+
+    dependencies {
+        testCompile "junit:junit:${junit_version}"
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
+        compileOnly "org.projectlombok:lombok:${lombok_version}"
+    }
+
+    dependencyManagement {
+        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${spring_boot_version}") }
+    }
 }
 
-dependencies {
-    compileOnly "org.projectlombok:lombok:${lombok_version}"
-    testCompile group: 'junit', name: 'junit', version: '${junit_version}'
-}
+

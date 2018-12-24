@@ -1,4 +1,4 @@
-package org.vitramu.engine.parser;
+package org.vitramu.master.parser;
 
 public class FlowDefinitionParser {
 }

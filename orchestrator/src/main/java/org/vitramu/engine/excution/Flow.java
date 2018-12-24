@@ -3,10 +3,12 @@ package org.vitramu.engine.excution;
 import lombok.*;
 import org.vitramu.engine.definition.element.DefinitionType;
 import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.engine.definition.element.GatewayDefinition;
 import org.vitramu.engine.definition.element.SequenceDefinition;
 import org.vitramu.engine.excution.element.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @ToString
 public class Flow extends AbstractExcutableInstance<FlowDefinition> implements FlowInstance {
@@ -53,12 +55,36 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         super.start();
         // throw state exception when current flow state not supports start operation
         SequenceDefinition seqDef = this.definition.findSequenceByStart();
-        
+        this.walkThrough(seqDef);
     }
 
-    protected void walkThrougnGateway(String gatewayId) {
+    protected void walkThrougnGateway(@NonNull String gatewayId) {
+        this.definition.findGatewayDefinition(gatewayId).ifPresent(gatewayDefinition -> {
+            List<SequenceDefinition> seqDefs = this.definition.findSequenceByTarget(gatewayId);
+            switch (gatewayDefinition.getGatewayType()) {
+                case PARALLEL:
+                    this.gateways.add(new ParallelGateway());
+                    seqDefs.stream().forEach(this::walkThrough);
+                    break;
+                case EXCLUSIVE:
+                case INCLUSIVE:
+                case JOIN:
+                    Optional<Gateway> walkedThroughGateway = this.findByGatewayDefinition(gatewayDefinition);
+                    if (!walkedThroughGateway.isPresent()) {
+                        JoinGateway gw = new JoinGateway(seqDefs.size());
+                        this.gateways.add(gw);
+                        walkedThroughGateway = Optional.of(gw);
+                    }
+                    walkedThroughGateway.ifPresent(gw -> ((JoinGateway) gw).hit());
+                default:
+                    return;
+
+
+            }
+        });
 
     }
+
     protected void walkThrough(SequenceDefinition seq) {
         DefinitionType targetType = seq.getTargetType();
         switch (targetType) {
@@ -66,7 +92,9 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
                 // TODO
                 break;
             case TASK:
-                this.startTask(seq.getTargetId());
+                this.definition.findTaskDefinition(seq.getTargetId()).ifPresent(taskDefinition -> {
+                    this.tasks.add(Task.builder().definition(taskDefinition).build());
+                });
                 break;
             case GATEWAY:
                 this.walkThrougnGateway(seq.getTargetId());
@@ -76,6 +104,11 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
 
         }
     }
+
+    private Optional<Gateway> findByGatewayDefinition(GatewayDefinition definition) {
+        return this.gateways.stream().filter(gw -> gw.getDefinition().equals(definition)).findFirst();
+    }
+
 
     @Override
     public void finish() {
@@ -87,15 +120,28 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
     }
 
     public void startTask(String taskId) {
-        System.out.println("Starting Task: "+taskId);
+        this.definition.findTaskDefinition(taskId).ifPresent(taskDefinition -> {
+            System.out.println("Starting Task: " + taskId);
+        });
     }
+
     @Override
-    public void completeTask(String taskId) {
+    public void completeTask(@NonNull String taskId) {
         // whether taskId is in current flow defintion
+        if (!this.definition.hasTask(taskId)) {
+            // TODO use exception
+            return;
+        }
+        this.definition.findTaskDefinition(taskId).ifPresent(taskDefinition -> {
+            // change task state according current task state and taskId
+            System.out.println("Recording State of Task: " + taskId);
 
-        // change task state according current task state and taskId
+            System.out.println("Completed Task: " + taskId);
 
+            List<SequenceDefinition> seqDefs = this.definition.findSequenceBySource(taskId);
+            seqDefs.stream().forEach(this::walkThrough);
 
+        });
     }
 
     @Override
