@@ -1,5 +1,6 @@
 package org.vitramu.engine.excution.element;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,6 +10,7 @@ import org.vitramu.engine.excution.Instance;
 
 
 @Builder
+@AllArgsConstructor
 public class StartEvent  extends AbstractInstance<StartEventDefinition> implements Instance {
 
     @Getter

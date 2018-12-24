@@ -1,5 +1,7 @@
 package org.vitramu.engine.excution;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.vitramu.engine.definition.FlowDefinitionRepository;
 import org.vitramu.engine.excution.element.StartEvent;
 
@@ -7,8 +9,10 @@ import org.vitramu.engine.excution.element.StartEvent;
  * FlowService is used for rest controller or event listener and other application layer element to consume capability provided by Flow
  *
  * */
+@Service
 public class FlowService {
 
+    @Autowired
     private FlowRepository flowRepository;
 
     private FlowDefinitionRepository flowDefinitionRepository;

@@ -1,5 +1,7 @@
 plugins {
     id 'java'
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
 
 group 'org.vitramu'
@@ -20,7 +22,18 @@ lombok {
 }
 
 dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-cache'
+    compile 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    compile 'org.springframework.boot:spring-boot-starter-json'
+    compile 'org.springframework.boot:spring-boot-starter-web-services'
+    compile 'org.springframework.boot:spring-boot-starter-aop'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compileOnly "org.projectlombok:lombok:${lombok_version}"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testCompile group: 'junit', name: 'junit', version: "${junit_version}"
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
     compile project(":common")
 }

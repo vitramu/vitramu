@@ -3,6 +3,7 @@ package org.vitramu.engine.excution;
 import lombok.*;
 import org.vitramu.engine.definition.element.DefinitionType;
 import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.engine.definition.element.SequenceDefinition;
 import org.vitramu.engine.excution.element.*;
 
 import java.util.List;
@@ -41,17 +42,42 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         return definition.getId();
     }
 
+    @Override
     public DefinitionType getDefinitionType() {
         return this.definition.getType();
     }
 
 
+    @Override
     public void start() {
         super.start();
         // throw state exception when current flow state not supports start operation
+        SequenceDefinition seqDef = this.definition.findSequenceByStart();
+        
     }
 
+    protected void walkThrougnGateway(String gatewayId) {
 
+    }
+    protected void walkThrough(SequenceDefinition seq) {
+        DefinitionType targetType = seq.getTargetType();
+        switch (targetType) {
+            case END:
+                // TODO
+                break;
+            case TASK:
+                this.startTask(seq.getTargetId());
+                break;
+            case GATEWAY:
+                this.walkThrougnGateway(seq.getTargetId());
+                break;
+            default:
+                // TODO  throw exeption
+
+        }
+    }
+
+    @Override
     public void finish() {
         super.start();
     }
@@ -60,6 +86,9 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         return false;
     }
 
+    public void startTask(String taskId) {
+        System.out.println("Starting Task: "+taskId);
+    }
     @Override
     public void completeTask(String taskId) {
         // whether taskId is in current flow defintion

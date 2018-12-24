@@ -12,8 +12,9 @@ public class GatewayDefinition extends AbstractDefinition {
     @Getter
     private GatewayType gatewayType;
 
-    public GatewayDefinition(String id, String name) {
+    public GatewayDefinition(String id, String name, GatewayType gatewayType) {
         super(id,name,DefinitionType.GATEWAY);
+        this.gatewayType = gatewayType;
     }
 
 }

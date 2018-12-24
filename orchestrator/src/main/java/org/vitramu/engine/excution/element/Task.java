@@ -12,6 +12,7 @@ public class Task extends AbstractExcutableInstance implements TaskInstance {
     @Setter
     private TaskDefinition definition;
 
+    @Override
     public String getDefinitionId() {
         return definition.getId();
     }
