@@ -6,7 +6,6 @@ import org.vitramu.engine.definition.element.*;
 import org.vitramu.engine.excution.element.*;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 @ToString
 public class Flow extends AbstractExcutableInstance<FlowDefinition> implements FlowInstance {
@@ -79,22 +78,32 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         }
         switch (def.getType()) {
             case SEQUENCE:
-                this.walkThroughSequence((SequenceDefinition) def);
+                this.visitSequence((SequenceDefinition) def);
                 break;
             case TASK:
                 this.startTask(def.getId());
                 break;
             case GATEWAY:
-                this.walkThrougnGateway(def.getId());
+                this.visitGateway(def.getId());
+                break;
+            case END:
+                this.visitEnd((EndEventDefinition) def);
                 break;
             default:
                 System.out.println("can not schedule the type");
+        }
+        if(this.isEnded()) {
+            System.out.println("the end");
         }
         schedule();
     }
 
 
-    private void walkThroughSequence(SequenceDefinition sequence) {
+    private void visitEnd(EndEventDefinition end) {
+        System.out.println("flow arrivies at the end");
+        // TODO make final response
+    }
+    private void visitSequence(SequenceDefinition sequence) {
         // excute condition according sourceType, then push to queue
         switch (sequence.getTargetType()) {
             case TASK:
@@ -104,20 +113,19 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
                 definition.findGatewayDefinition(sequence.getTargetId()).ifPresent(this::enqueue);
                 break;
             case END:
-                // TODO
-                System.out.println("arrived end point, response with " + response);
+                enqueue(definition.getEnd());
                 break;
             default:
                 System.out.println("not support the type");
         }
     }
 
-    private void walkThroughParallelGateway(@NonNull GatewayDefinition gateway) {
+    private void visitParallelGateway(@NonNull GatewayDefinition gateway) {
         @NonNull List<SequenceDefinition> nextSeqDefs = this.definition.findSequenceBySource(gateway.getId());
         nextSeqDefs.stream().forEach(this::enqueue);
     }
 
-    private void walkThroughJoinGateway(@NonNull GatewayDefinition gateway) {
+    private void visitJoinGateway(@NonNull GatewayDefinition gateway) {
         Optional<JoinGateway> gwOpt = synchronizePoints.stream()
                 .filter(gw -> gw.getDefinitionId().equals(gateway.getId()))
                 .findFirst();
@@ -136,16 +144,16 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         }
     }
 
-    protected void walkThrougnGateway(@NonNull String gatewayId) {
+    protected void visitGateway(@NonNull String gatewayId) {
         this.definition.findGatewayDefinition(gatewayId).ifPresent(gatewayDefinition -> {
             switch (gatewayDefinition.getGatewayType()) {
                 case PARALLEL:
-                    this.walkThroughParallelGateway(gatewayDefinition);
+                    this.visitParallelGateway(gatewayDefinition);
                     break;
                 case EXCLUSIVE:
                 case INCLUSIVE:
                 case JOIN:
-                    this.walkThroughJoinGateway(gatewayDefinition);
+                    this.visitJoinGateway(gatewayDefinition);
                     break;
                 default:
                     return;

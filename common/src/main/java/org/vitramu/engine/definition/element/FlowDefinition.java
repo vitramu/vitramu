@@ -9,8 +9,10 @@ import java.util.stream.Collectors;
 @Builder
 public class FlowDefinition extends AbstractDefinition {
 
+    @Getter
     @Setter
     private StartEventDefinition start;
+    @Getter
     @Setter
     private EndEventDefinition end;
     @Singular
