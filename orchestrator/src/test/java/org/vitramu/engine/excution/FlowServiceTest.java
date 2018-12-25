@@ -42,7 +42,8 @@ public class FlowServiceTest {
                 .task(new TaskDefinition("T1", "RequestReceived"))
                 .task(new TaskDefinition("T2", "CreateOsbBooking"))
                 .task(new TaskDefinition("T3", "CreatePudBooking"))
-                .task(new TaskDefinition("T4", "FreshBookingStatus"))
+                .task(new TaskDefinition("T4", "CreateEdjBooking"))
+                .task(new TaskDefinition("T5", "FreshBookingStatus"))
                 .gateway(new GatewayDefinition("GW1", "ParallelGateway", GatewayType.PARALLEL))
                 .gateway(new GatewayDefinition("GW2", "ParallelGateway", GatewayType.JOIN))
                 .build();
@@ -76,6 +77,12 @@ public class FlowServiceTest {
 
         when(flowRepository.findFlowInstanceById(any())).thenReturn(flowInstance);
         flowService.completeTask(flowInstanceId, "T1");
+
+        flowService.completeTask(flowInstanceId, "T2");
+        flowService.completeTask(flowInstanceId, "T3");
+        flowService.completeTask(flowInstanceId, "T4");
+        flowService.completeTask(flowInstanceId, "T5");
+
     }
 
     @Test
