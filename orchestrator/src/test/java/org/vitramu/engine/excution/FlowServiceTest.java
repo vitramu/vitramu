@@ -21,20 +21,21 @@ public class FlowServiceTest {
     @Autowired
     private FlowService flowService;
 
-    private FlowDefinition flowDefinition;
-
     @MockBean
     private FlowDefinitionRepository flowDefinitionRepository;
     @MockBean
     private FlowRepository flowRepository;
 
-    private String flowInstanceId = "Instance-1";
-    private String flowDefinitionId = "F1";
-
     @Before
     public void setUp() {
         flowService = new FlowService(flowRepository, flowDefinitionRepository);
-        flowDefinition = FlowDefinition.builder()
+
+
+    }
+
+    @Test
+    public void startFlowInstance() {
+        FlowDefinition flowDefinition = FlowDefinition.builder()
                 .id("F1")
                 .name("SimpleFlowDemo")
                 .start(new StartEventDefinition("S0", "S0"))
@@ -59,12 +60,10 @@ public class FlowServiceTest {
                 .connect("S9", "GW2", "T5")
                 .connect("S10", "T5", "E0");
 
-    }
-
-    @Test
-    public void startFlowInstance() {
         when(flowRepository.isStarted(any())).thenReturn(false);
         when(flowDefinitionRepository.findFlowDefinitionById(any())).thenReturn(flowDefinition);
+        String flowInstanceId = "Instance-1";
+        String flowDefinitionId = "F1";
         StartEvent startEvent = StartEvent.builder()
                 .flowDefinitionId(flowDefinitionId)
                 .parentFlowInstanceId(null)
@@ -85,6 +84,56 @@ public class FlowServiceTest {
 
     }
 
+    @Test
+    public void continousParallelGateway() {
+        FlowDefinition flowDefinition = FlowDefinition.builder()
+                .id("F2")
+                .name("SimpleFlowDemo")
+                .start(new StartEventDefinition("S0", "S0"))
+                .end(new EndEventDefinition("E0", "E0"))
+                .task(new TaskDefinition("T1", "RequestReceived"))
+                .task(new TaskDefinition("T2", "CreateOsbBooking"))
+                .task(new TaskDefinition("T3", "CreatePudBooking"))
+                .task(new TaskDefinition("T4", "CreateEdjBooking"))
+                .task(new TaskDefinition("T5", "FreshBookingStatus"))
+                .gateway(new GatewayDefinition("GW1", "ParallelGateway", GatewayType.PARALLEL))
+                .gateway(new GatewayDefinition("GW2", "ParallelGateway", GatewayType.PARALLEL))
+                .gateway(new GatewayDefinition("GW3", "ParallelGateway", GatewayType.JOIN))
+                .build();
+        flowDefinition.connect("S1", "S0", "T1")
+                .connect("S2", "T1", "GW1")
+                .connect("S3", "GW1", "T2")
+                .connect("S4", "GW1", "GW2")
+                .connect("S5", "T2", "GW3")
+                .connect("S6", "GW2", "T3")
+                .connect("S7", "GW2", "T4")
+                .connect("S8", "T3", "GW3")
+                .connect("S9", "T4", "GW3")
+                .connect("S10", "GW3", "T5")
+                .connect("S11", "T5", "E0");
+
+
+        when(flowRepository.isStarted(any())).thenReturn(false);
+        when(flowDefinitionRepository.findFlowDefinitionById(any())).thenReturn(flowDefinition);
+        String flowInstanceId = "Instance-2";
+        String flowDefinitionId = "F2";
+        StartEvent startEvent = StartEvent.builder()
+                .flowDefinitionId(flowDefinitionId)
+                .parentFlowInstanceId(null)
+                .serviceInstanceId("Service1")
+                .serviceName("OSB")
+                .transactionId(flowInstanceId)
+                .data("")
+                .build();
+        Flow flowInstance = flowService.startFlowInstance(startEvent);
+
+        when(flowRepository.findFlowInstanceById(any())).thenReturn(flowInstance);
+        flowService.completeTask(flowInstanceId, "T1");
+        flowService.completeTask(flowInstanceId, "T2");
+        flowService.completeTask(flowInstanceId, "T3");
+        flowService.completeTask(flowInstanceId, "T4");
+        flowService.completeTask(flowInstanceId, "T5");
+    }
     @Test
     public void completeTask() {
     }

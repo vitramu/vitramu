@@ -27,6 +27,7 @@ public abstract class AbstractInstance<T extends Definition> implements Instance
         return getDefinition().getType();
     }
 
+
     @Getter
     protected final Long createdAt;
 }

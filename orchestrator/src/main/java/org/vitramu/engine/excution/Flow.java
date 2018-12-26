@@ -1,6 +1,9 @@
 package org.vitramu.engine.excution;
 
 import lombok.*;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.element.*;
 import org.vitramu.engine.excution.element.*;
@@ -103,8 +106,32 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         System.out.println("flow arrivies at the end");
         // TODO make final response
     }
-    private void visitSequence(SequenceDefinition sequence) {
-        // excute condition according sourceType, then push to queue
+    private void visitSequence(@NonNull SequenceDefinition sequence) {
+        // if sequence from exclusive or inclusive gateway
+        // condition expression evaluates to true, trans along target
+        // condition expression evaluates to false, skip
+        System.out.println("visiting sequence: " + sequence.getId());
+//        if(DefinitionType.GATEWAY.equals(sequence.getSourceType())) {
+//            Optional<GatewayDefinition> gwDefOpt = definition.findGatewayDefinition(sequence.getSourceId());
+//            if(gwDefOpt.isPresent()) {
+//                GatewayDefinition gwDef = gwDefOpt.get();
+//                if(GatewayType.EXCLUSIVE.equals(gwDef.getGatewayType()) || GatewayType.INCLUSIVE.equals(gwDef.getGatewayType())) {
+//                    String seqCondition = sequence.getCondition();
+//                    if(null != seqCondition) {
+//                        ExpressionParser parser = new SpelExpressionParser();
+//                        Expression exp = parser.parseExpression(seqCondition);
+//                        boolean satisfied = (boolean)exp.getValue();
+//                        if(satisfied) {
+//
+//                        } else {
+//
+//                        }
+//                    }
+//                }
+//            } else {
+//                System.err.println("No Gateway found");
+//            }
+//        }
         switch (sequence.getTargetType()) {
             case TASK:
                 definition.findTaskDefinition(sequence.getTargetId()).ifPresent(this::enqueue);
@@ -121,11 +148,13 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
     }
 
     private void visitParallelGateway(@NonNull GatewayDefinition gateway) {
+        System.out.println("visiting parallel gateway: " + gateway.getId());
         @NonNull List<SequenceDefinition> nextSeqDefs = this.definition.findSequenceBySource(gateway.getId());
         nextSeqDefs.stream().forEach(this::enqueue);
     }
 
     private void visitJoinGateway(@NonNull GatewayDefinition gateway) {
+        System.out.println("visiting join gateway: " + gateway.getId());
         Optional<JoinGateway> gwOpt = synchronizePoints.stream()
                 .filter(gw -> gw.getDefinitionId().equals(gateway.getId()))
                 .findFirst();
