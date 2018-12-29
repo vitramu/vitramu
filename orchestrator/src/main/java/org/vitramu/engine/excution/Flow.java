@@ -1,9 +1,6 @@
 package org.vitramu.engine.excution;
 
 import lombok.*;
-import org.springframework.expression.Expression;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.element.*;
 import org.vitramu.engine.excution.element.*;
@@ -95,7 +92,7 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
             default:
                 System.out.println("can not schedule the type");
         }
-        if(this.isEnded()) {
+        if (this.isEnded()) {
             System.out.println("the end");
         }
         schedule();
@@ -106,6 +103,7 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         System.out.println("flow arrivies at the end");
         // TODO make final response
     }
+
     private void visitSequence(@NonNull SequenceDefinition sequence) {
         // if sequence from exclusive or inclusive gateway
         // condition expression evaluates to true, trans along target
@@ -205,7 +203,11 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
     public void startTask(String taskId) {
         this.definition.findTaskDefinition(taskId).ifPresent(taskDefinition -> {
             System.out.println("Starting Task: " + taskId);
-            this.tasks.add(Task.builder().definition(taskDefinition).build());
+            Task taskInstance = Task.builder().definition(taskDefinition).build();
+            taskInstance.on(Task.TaskEvent.START_BEGIN);
+
+            taskInstance.start();
+            this.tasks.add(taskInstance);
         });
     }
 
@@ -216,6 +218,11 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
 //            // TODO use exception
 //            return;
 //        }
+        Optional<Task> taskInstanceOpt = this.tasks.stream().filter(t -> t.getDefinitionId().equals(taskId)).findFirst();
+
+        taskInstanceOpt.ifPresent(task -> {
+            task.on(Task.TaskEvent.COMPLETE);
+        });
         // change task state according current task state and taskId
         System.out.println("Recording State of Task: " + taskId);
 
