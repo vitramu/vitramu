@@ -45,8 +45,8 @@ public class FlowServiceTest {
                 .task(new TaskDefinition("T3", "CreatePudBooking"))
                 .task(new TaskDefinition("T4", "CreateEdjBooking"))
                 .task(new TaskDefinition("T5", "FreshBookingStatus"))
-                .gateway(new GatewayDefinition("GW1", "ParallelGateway", GatewayType.PARALLEL))
-                .gateway(new GatewayDefinition("GW2", "ParallelGateway", GatewayType.JOIN))
+                .gateway(new GatewayDefinition("GW1", "ParallelGateway", DefinitionType.GATEWAY_PARALLEL))
+                .gateway(new GatewayDefinition("GW2", "ParallelGateway", DefinitionType.GATEWAY_JOIN))
                 .build();
 
         flowDefinition.connect("S1", "S0", "T1")
@@ -96,9 +96,9 @@ public class FlowServiceTest {
                 .task(new TaskDefinition("T3", "CreatePudBooking"))
                 .task(new TaskDefinition("T4", "CreateEdjBooking"))
                 .task(new TaskDefinition("T5", "FreshBookingStatus"))
-                .gateway(new GatewayDefinition("GW1", "ParallelGateway", GatewayType.PARALLEL))
-                .gateway(new GatewayDefinition("GW2", "ParallelGateway", GatewayType.PARALLEL))
-                .gateway(new GatewayDefinition("GW3", "ParallelGateway", GatewayType.JOIN))
+                .gateway(new GatewayDefinition("GW1", "ParallelGateway", DefinitionType.GATEWAY_PARALLEL))
+                .gateway(new GatewayDefinition("GW2", "ParallelGateway", DefinitionType.GATEWAY_PARALLEL))
+                .gateway(new GatewayDefinition("GW3", "ParallelGateway", DefinitionType.GATEWAY_JOIN))
                 .build();
         flowDefinition.connect("S1", "S0", "T1")
                 .connect("S2", "T1", "GW1")

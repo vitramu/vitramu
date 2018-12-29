@@ -10,13 +10,9 @@ import org.vitramu.engine.definition.AbstractDefinition;
 @EqualsAndHashCode
 public class GatewayDefinition extends AbstractDefinition {
 
-    @Setter
-    @Getter
-    private GatewayType gatewayType;
 
-    public GatewayDefinition(String id, String name, GatewayType gatewayType) {
-        super(id,name,DefinitionType.GATEWAY);
-        this.gatewayType = gatewayType;
+    public GatewayDefinition(String id, String name, DefinitionType type) {
+        super(id, name, type);
     }
 
 }

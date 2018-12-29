@@ -10,6 +10,7 @@ public class JoinGateway extends Gateway {
 
     private int hitCount;
 
+    private boolean passed = false;
     private StateMachine<JoinGatewayState, JoinGatewayEvent> stateMachine;
 
     public JoinGateway(int indegree) {
@@ -18,7 +19,7 @@ public class JoinGateway extends Gateway {
         stateMachine.start();
     }
 
-    private static StateMachine<JoinGatewayState, JoinGatewayEvent> createJoinGatewayStateMachine() {
+    private StateMachine<JoinGatewayState, JoinGatewayEvent> createJoinGatewayStateMachine() {
         StateMachineBuilder.Builder<JoinGatewayState, JoinGatewayEvent> builder = StateMachineBuilder.builder();
         try {
             builder.configureStates()
@@ -26,26 +27,36 @@ public class JoinGateway extends Gateway {
                     .initial(JoinGatewayState.INITIAL)
                     .states(EnumSet.allOf(JoinGatewayState.class));
             builder.configureTransitions()
-                    .withExternal().source(JoinGatewayState.INITIAL).target(JoinGatewayState.WAIT).event(JoinGatewayEvent.BLOCK)
+                    .withExternal().source(JoinGatewayState.INITIAL).target(JoinGatewayState.WAIT).event(JoinGatewayEvent.BLOCK).action(context -> this.block())
                     .and()
-                    .withExternal().source(JoinGatewayState.INITIAL).target(JoinGatewayState.PAST).event(JoinGatewayEvent.FINISH);
+                    .withExternal().source(JoinGatewayState.WAIT).target(JoinGatewayState.WAIT).event(JoinGatewayEvent.BLOCK).action(context -> this.block())
+                    .and()
+                    .withExternal().source(JoinGatewayState.INITIAL).target(JoinGatewayState.PAST).event(JoinGatewayEvent.FINISH).action(context -> this.pass());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return builder.build();
     }
 
-    @Override
-    public boolean shouldWait() {
-        return JoinGatewayState.WAIT.equals(stateMachine.getState());
+    public boolean isBlocked() {
+        return !passed;
+    }
+
+    private void block() {
+        passed = false;
+    }
+    private void pass() {
+        passed = true;
     }
 
     public void hit() {
         // TOOD use redis to atomic increment
-        System.out.println("Hit JoinGateway " + this.getDefinitionId() + " with count: " + hitCount);
         this.hitCount++;
+        System.out.println("Hit JoinGateway " + this.getDefinitionId() + " with count: " + hitCount);
         if(this.hitCount >= this.indegree) {
             stateMachine.sendEvent(JoinGatewayEvent.FINISH);
+        } else {
+            stateMachine.sendEvent(JoinGatewayEvent.BLOCK);
         }
     }
 
