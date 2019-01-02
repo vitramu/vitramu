@@ -6,9 +6,8 @@ import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineBuilder;
-import org.vitramu.engine.definition.element.DefinitionType;
 import org.vitramu.engine.definition.element.SequenceDefinition;
-import org.vitramu.engine.excution.AbstractInstance;
+import org.vitramu.engine.excution.instance.AbstractInstance;
 
 import java.util.EnumSet;
 

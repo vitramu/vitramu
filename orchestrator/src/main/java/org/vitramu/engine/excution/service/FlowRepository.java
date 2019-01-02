@@ -1,6 +1,7 @@
-package org.vitramu.engine.excution;
+package org.vitramu.engine.excution.service;
 
 import org.springframework.stereotype.Repository;
+import org.vitramu.engine.excution.instance.Flow;
 
 /**
  * FlowRepository provides capability like re-construct an existed flow instance from cache or database, persist flow instance state.

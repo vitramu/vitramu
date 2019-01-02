@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.vitramu.engine.definition.element.StartEventDefinition;
-import org.vitramu.engine.excution.AbstractInstance;
-import org.vitramu.engine.excution.Instance;
+import org.vitramu.engine.excution.instance.AbstractInstance;
+import org.vitramu.engine.excution.instance.Instance;
 
 
 @Builder

@@ -5,8 +5,8 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineBuilder;
 import org.vitramu.engine.definition.element.DefinitionType;
 import org.vitramu.engine.definition.element.TaskDefinition;
-import org.vitramu.engine.excution.AbstractExcutableInstance;
-import org.vitramu.engine.excution.TaskInstance;
+import org.vitramu.engine.excution.instance.AbstractExcutableInstance;
+import org.vitramu.engine.excution.instance.TaskInstance;
 
 import java.util.EnumSet;
 import java.util.Set;

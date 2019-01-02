@@ -10,6 +10,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.vitramu.engine.definition.FlowDefinitionRepository;
 import org.vitramu.engine.definition.element.*;
 import org.vitramu.engine.excution.element.StartEvent;
+import org.vitramu.engine.excution.instance.Flow;
+import org.vitramu.engine.excution.service.FlowRepository;
+import org.vitramu.engine.excution.service.FlowService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

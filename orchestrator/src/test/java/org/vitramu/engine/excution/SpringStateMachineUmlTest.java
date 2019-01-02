@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class SpringStateMachineTest {
+public class SpringStateMachineUmlTest {
 
     @Value("classpath:simple-sequence.uml")
     Resource simpleSequence;

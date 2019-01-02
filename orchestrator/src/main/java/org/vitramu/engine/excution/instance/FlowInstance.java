@@ -1,4 +1,4 @@
-package org.vitramu.engine.excution;
+package org.vitramu.engine.excution.instance;
 
 public interface FlowInstance extends ExcutableInstance {
 
