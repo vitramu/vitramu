@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
@@ -13,6 +15,9 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.persist.AbstractStateMachinePersister;
+import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
+import org.springframework.statemachine.redis.RedisStateMachineContextRepository;
+import org.springframework.statemachine.redis.RedisStateMachinePersister;
 import org.springframework.statemachine.state.State;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -203,9 +208,44 @@ public class SpringStateMachinePocTest {
         osbsm.sendEvent("CREATE_EW_FIN");
     }
 
+    public RedisStateMachinePersister<Task, String> redisStateMachinePersister() {
+        RedisStateMachineContextRepository<Task, String> repository =
+                new RedisStateMachineContextRepository<>(new JedisConnectionFactory());
+        StateMachinePersist<Task, String, String> stateMachinePersist = new RepositoryStateMachinePersist<Task, String>(repository);
+        return new RedisStateMachinePersister<>(stateMachinePersist);
+    }
+
     @Test
-    public void testStateMachinePersistWithRedis() {
+    public void testStateMachinePersistWithRedis() throws Exception {
         // TODO
+        RedisStateMachinePersister<Task, String> persister = redisStateMachinePersister();
+
+        osbsm.start();
+        // TODO use statemachine pooling technical
+        persister.persist(osbsm, "PROTOTYPE");
+
+        //        Transaction A
+        osbsm.sendEvent("FLOW_STARTED");
+        osbsm.sendEvent("REQUEST_SAVED");
+        osbsm.sendEvent("CREATE_OSB_FIN");
+        persister.persist(osbsm, "BLOCKING_AFTER_OSB");
+        log.info("Before restore: {}", osbsm.getState().getIds());
+
+        //        Transaction B
+        persister.restore(osbsm, "PROTOTYPE");
+        log.info("After restore: {}", osbsm.getState().getIds());
+        osbsm.sendEvent("FLOW_STARTED");
+        osbsm.sendEvent("REQUEST_SAVED");
+        osbsm.sendEvent("CREATE_OSB_FIN");
+        osbsm.sendEvent("CREATE_PUD_FIN");
+        persister.persist(osbsm, "BLOCKING_FINISH");
+        log.info("Before restore: {}", osbsm.getState().getIds());
+
+        //        Transaction A
+        persister.restore(osbsm, "BLOCKING_AFTER_OSB");
+        log.info("After restore: {}", osbsm.getState().getIds());
+        osbsm.sendEvent("CREATE_PUD_FIN");
+        osbsm.sendEvent("CREATE_EW_FIN");
     }
 
     @Test
