@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_QYfyQA3eEem3EM5-JaphMA" name="simple-sequence">
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_QclBAA3eEem3EM5-JaphMA">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_QYjcoA3eEem3EM5-JaphMA" name="SimpleSequenceSM" visibility="public">
+    <region xmi:type="uml:Region" xmi:id="_QYtNoA3eEem3EM5-JaphMA" name="Region1">
+      <transition xmi:type="uml:Transition" xmi:id="_fuqrAA3eEem3EM5-JaphMA" source="_SS9T0A3eEem3EM5-JaphMA" target="_S9Yw4A3eEem3EM5-JaphMA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_nkP_0A3hEem3EM5-JaphMA" name="RequestBooking"/>
+      </transition>
+      <transition xmi:type="uml:Transition" xmi:id="_7hFpEA3eEem3EM5-JaphMA" source="_S9Yw4A3eEem3EM5-JaphMA" target="_UxhA8A3eEem3EM5-JaphMA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_w1h98A3hEem3EM5-JaphMA"/>
+      </transition>
+      <transition xmi:type="uml:Transition" xmi:id="_Ag6ZEA3fEem3EM5-JaphMA" source="_UxhA8A3eEem3EM5-JaphMA" target="_V3iN0A3eEem3EM5-JaphMA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_BZuwEA3iEem3EM5-JaphMA"/>
+      </transition>
+      <transition xmi:type="uml:Transition" xmi:id="_Ek-rcA3fEem3EM5-JaphMA" source="_V3iN0A3eEem3EM5-JaphMA" target="_XvOvQA3eEem3EM5-JaphMA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_EzEDYA3iEem3EM5-JaphMA" name="BookingPudCompleted"/>
+      </transition>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_SS9T0A3eEem3EM5-JaphMA" name="Initial"/>
+      <subvertex xmi:type="uml:State" xmi:id="_S9Yw4A3eEem3EM5-JaphMA" name="RequestReceived"/>
+      <subvertex xmi:type="uml:State" xmi:id="_UxhA8A3eEem3EM5-JaphMA" name="OSBBooking"/>
+      <subvertex xmi:type="uml:State" xmi:id="_V3iN0A3eEem3EM5-JaphMA" name="PUDBooking"/>
+      <subvertex xmi:type="uml:FinalState" xmi:id="_XvOvQA3eEem3EM5-JaphMA" name="FinalState5"/>
+    </region>
+  </packagedElement>
+</uml:Model>

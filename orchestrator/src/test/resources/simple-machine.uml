@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_ZIICkA3jEem3EM5-JaphMA" name="simple-machine">
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_ZLL9oA3jEem3EM5-JaphMA">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_ZINiIA3jEem3EM5-JaphMA" name="SimpleMachine">
+    <region xmi:type="uml:Region" xmi:id="_ZIOJMA3jEem3EM5-JaphMA" name="SimpleMachineMain">
+      <transition xmi:type="uml:Transition" xmi:id="_qm5mkA3jEem3EM5-JaphMA" source="_faFI0A3jEem3EM5-JaphMA" target="_kaJJYA3jEem3EM5-JaphMA"/>
+      <transition xmi:type="uml:Transition" xmi:id="_sE7DwA3jEem3EM5-JaphMA" name="E1" source="_kaJJYA3jEem3EM5-JaphMA" target="_nsfq8A3jEem3EM5-JaphMA">
+        <trigger xmi:type="uml:Trigger" xmi:id="_WOUucA3kEem3EM5-JaphMA" event="_UbdCoA3kEem3EM5-JaphMA"/>
+      </transition>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_faFI0A3jEem3EM5-JaphMA"/>
+      <subvertex xmi:type="uml:State" xmi:id="_kaJJYA3jEem3EM5-JaphMA" name="S1"/>
+      <subvertex xmi:type="uml:State" xmi:id="_nsfq8A3jEem3EM5-JaphMA" name="S2"/>
+    </region>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Signal" xmi:id="_UBr3wA3kEem3EM5-JaphMA" name="E1"/>
+  <packagedElement xmi:type="uml:SignalEvent" xmi:id="_UbdCoA3kEem3EM5-JaphMA" name="SignalEventE1" signal="_UBr3wA3kEem3EM5-JaphMA"/>
+</uml:Model>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uml:Model xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xmi:id="_Fg7JMA2FEemZEscnlqllzA" name="PapyrusStateMachine">
+  <packageImport xmi:type="uml:PackageImport" xmi:id="_FmzHsA2FEemZEscnlqllzA">
+    <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
+  </packageImport>
+  <packagedElement xmi:type="uml:StateMachine" xmi:id="_Fha4cA2FEemZEscnlqllzA" name="StateMachine1">
+    <region xmi:type="uml:Region" xmi:id="_Fia-AA2FEemZEscnlqllzA" name="Region1">
+      <transition xmi:type="uml:Transition" xmi:id="_aQzRkA2FEemZEscnlqllzA" source="_M0NwoA2FEemZEscnlqllzA" target="_QQ7vIA2FEemZEscnlqllzA"/>
+      <transition xmi:type="uml:Transition" xmi:id="_bCDvYA2FEemZEscnlqllzA" source="_QQ7vIA2FEemZEscnlqllzA" target="_X2RI0A2FEemZEscnlqllzA"/>
+      <transition xmi:type="uml:Transition" xmi:id="_VUU7EA2GEemZEscnlqllzA" source="_RUF_0A2GEemZEscnlqllzA" target="_UsMkEA2GEemZEscnlqllzA"/>
+      <transition xmi:type="uml:Transition" xmi:id="_ZD_qwA2GEemZEscnlqllzA" source="_X2RI0A2FEemZEscnlqllzA" target="_I-m7kA2GEemZEscnlqllzA"/>
+      <transition xmi:type="uml:Transition" xmi:id="_ZytK4A2GEemZEscnlqllzA" source="_X2RI0A2FEemZEscnlqllzA" target="_J-7JEA2GEemZEscnlqllzA"/>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_M0NwoA2FEemZEscnlqllzA" name="start"/>
+      <subvertex xmi:type="uml:State" xmi:id="_QQ7vIA2FEemZEscnlqllzA" name="Task1"/>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_X2RI0A2FEemZEscnlqllzA" name="Parallel" kind="fork"/>
+      <subvertex xmi:type="uml:State" xmi:id="_92TxcA2FEemZEscnlqllzA" name="State6">
+        <region xmi:type="uml:Region" xmi:id="_-a33EQ2FEemZEscnlqllzA" name="Region1">
+          <transition xmi:type="uml:Transition" xmi:id="_OYwQEA2GEemZEscnlqllzA" source="_HsZs0A2GEemZEscnlqllzA" target="_I-m7kA2GEemZEscnlqllzA"/>
+          <transition xmi:type="uml:Transition" xmi:id="_SAjdMA2GEemZEscnlqllzA" source="_I-m7kA2GEemZEscnlqllzA" target="_RUF_0A2GEemZEscnlqllzA"/>
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_HsZs0A2GEemZEscnlqllzA" name="Initial1"/>
+          <subvertex xmi:type="uml:State" xmi:id="_I-m7kA2GEemZEscnlqllzA" name="State2"/>
+        </region>
+        <region xmi:type="uml:Region" xmi:id="_AKGZAA2GEemZEscnlqllzA" name="Region2">
+          <transition xmi:type="uml:Transition" xmi:id="_Ko9kkA2GEemZEscnlqllzA" source="_IK9REA2GEemZEscnlqllzA" target="_J-7JEA2GEemZEscnlqllzA"/>
+          <transition xmi:type="uml:Transition" xmi:id="_T86cMA2GEemZEscnlqllzA" source="_J-7JEA2GEemZEscnlqllzA" target="_RUF_0A2GEemZEscnlqllzA"/>
+          <subvertex xmi:type="uml:Pseudostate" xmi:id="_IK9REA2GEemZEscnlqllzA" name="Initial1"/>
+          <subvertex xmi:type="uml:State" xmi:id="_J-7JEA2GEemZEscnlqllzA" name="State2"/>
+        </region>
+      </subvertex>
+      <subvertex xmi:type="uml:Pseudostate" xmi:id="_RUF_0A2GEemZEscnlqllzA" name="Join7" kind="join"/>
+      <subvertex xmi:type="uml:FinalState" xmi:id="_UsMkEA2GEemZEscnlqllzA" name="FinalState8"/>
+    </region>
+  </packagedElement>
+</uml:Model>

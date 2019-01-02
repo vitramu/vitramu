@@ -15,5 +15,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compile "org.springframework.statemachine:spring-statemachine-core:${spring_state_machine_core}"
+    compile "org.springframework.statemachine:spring-statemachine-uml:${spring_state_machine_core}"
+
     compile project(":common")
 }
