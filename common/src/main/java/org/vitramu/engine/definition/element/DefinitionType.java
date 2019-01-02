@@ -13,7 +13,10 @@ public enum DefinitionType implements Type {
     START("START"),
     TASK("TASK"),
     COMMAND("COMMAND"),
-    GATEWAY("GATEWAY"),
+    GATEWAY_PARALLEL("PARALLEL"),
+    GATEWAY_EXCLUSIVE("EXCLUSIVE"),
+    GATEWAY_INCLUSIVE("INCLUSIVE"),
+    GATEWAY_JOIN("JOIN"),
     SEQUENCE("SEQUENCE"),
     END("END");
     private String name;

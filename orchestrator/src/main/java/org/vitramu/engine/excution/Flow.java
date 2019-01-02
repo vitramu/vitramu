@@ -26,8 +26,6 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
     private String response;
 
     private Deque<Definition> scheduled = new LinkedList<>();
-    private List<Definition> finished = new ArrayList<>();
-    private List<Definition> skipped = new ArrayList<>();
 
     private List<JoinGateway> synchronizePoints = new ArrayList<>();
 
@@ -83,8 +81,17 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
             case TASK:
                 this.startTask(def.getId());
                 break;
-            case GATEWAY:
-                this.visitGateway(def.getId());
+            case GATEWAY_PARALLEL:
+                this.visitParallelGateway((GatewayDefinition) def);
+                break;
+            case GATEWAY_EXCLUSIVE:
+                this.visitExclusiveGateway((GatewayDefinition) def);
+                break;
+            case GATEWAY_INCLUSIVE:
+                this.visitInclusiveGateway((GatewayDefinition) def);
+                break;
+            case GATEWAY_JOIN:
+                this.visitJoinGateway((GatewayDefinition) def);
                 break;
             case END:
                 this.visitEnd((EndEventDefinition) def);
@@ -109,32 +116,15 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         // condition expression evaluates to true, trans along target
         // condition expression evaluates to false, skip
         System.out.println("visiting sequence: " + sequence.getId());
-//        if(DefinitionType.GATEWAY.equals(sequence.getSourceType())) {
-//            Optional<GatewayDefinition> gwDefOpt = definition.findGatewayDefinition(sequence.getSourceId());
-//            if(gwDefOpt.isPresent()) {
-//                GatewayDefinition gwDef = gwDefOpt.get();
-//                if(GatewayType.EXCLUSIVE.equals(gwDef.getGatewayType()) || GatewayType.INCLUSIVE.equals(gwDef.getGatewayType())) {
-//                    String seqCondition = sequence.getCondition();
-//                    if(null != seqCondition) {
-//                        ExpressionParser parser = new SpelExpressionParser();
-//                        Expression exp = parser.parseExpression(seqCondition);
-//                        boolean satisfied = (boolean)exp.getValue();
-//                        if(satisfied) {
-//
-//                        } else {
-//
-//                        }
-//                    }
-//                }
-//            } else {
-//                System.err.println("No Gateway found");
-//            }
-//        }
+
         switch (sequence.getTargetType()) {
             case TASK:
                 definition.findTaskDefinition(sequence.getTargetId()).ifPresent(this::enqueue);
                 break;
-            case GATEWAY:
+            case GATEWAY_PARALLEL:
+            case GATEWAY_EXCLUSIVE:
+            case GATEWAY_INCLUSIVE:
+            case GATEWAY_JOIN:
                 definition.findGatewayDefinition(sequence.getTargetId()).ifPresent(this::enqueue);
                 break;
             case END:
@@ -151,12 +141,21 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         nextSeqDefs.stream().forEach(this::enqueue);
     }
 
+    private void visitExclusiveGateway(@NonNull GatewayDefinition gateway) {
+
+    }
+
+    private void visitInclusiveGateway(@NonNull GatewayDefinition gateway) {
+
+    }
+
     private void visitJoinGateway(@NonNull GatewayDefinition gateway) {
         System.out.println("visiting join gateway: " + gateway.getId());
         Optional<JoinGateway> gwOpt = synchronizePoints.stream()
                 .filter(gw -> gw.getDefinitionId().equals(gateway.getId()))
                 .findFirst();
         JoinGateway gw = gwOpt.orElseGet(() -> {
+            System.out.println("creating new join gateway: " + gateway.getId());
             List<SequenceDefinition> seqDefs = definition.findSequenceByTarget(gateway.getId());
             JoinGateway jgw = new JoinGateway(seqDefs.size());
             jgw.setDefinition(gateway);
@@ -165,30 +164,10 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
         });
         gw.hit();
 
-        if (!gw.shouldWait()) {
+        if (!gw.isBlocked()) {
             @NonNull List<SequenceDefinition> seqDefs = definition.findSequenceBySource(gw.getDefinitionId());
             seqDefs.stream().forEach(this::enqueue);
         }
-    }
-
-    protected void visitGateway(@NonNull String gatewayId) {
-        this.definition.findGatewayDefinition(gatewayId).ifPresent(gatewayDefinition -> {
-            switch (gatewayDefinition.getGatewayType()) {
-                case PARALLEL:
-                    this.visitParallelGateway(gatewayDefinition);
-                    break;
-                case EXCLUSIVE:
-                case INCLUSIVE:
-                case JOIN:
-                    this.visitJoinGateway(gatewayDefinition);
-                    break;
-                default:
-                    return;
-
-
-            }
-        });
-
     }
 
     @Override
