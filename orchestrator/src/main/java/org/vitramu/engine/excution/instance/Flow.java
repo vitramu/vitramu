@@ -72,7 +72,7 @@ public class Flow extends AbstractExcutableInstance<FlowDefinition> implements F
 
     private void schedule() {
         Definition def = dequeue();
-        // empty queue, end current loop
+        // empty taskQueue, end current loop
         if (null == def) {
             return;
         }

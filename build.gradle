@@ -40,6 +40,7 @@ subprojects {
         testCompile "junit:junit:${junit_version}"
         testCompile 'org.springframework.boot:spring-boot-starter-test'
         compileOnly "org.projectlombok:lombok:${lombok_version}"
+        compile "com.google.code.gson:gson"
     }
 
     dependencyManagement {

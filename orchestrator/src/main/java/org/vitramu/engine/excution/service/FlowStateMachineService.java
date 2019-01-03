@@ -2,6 +2,10 @@ package org.vitramu.engine.excution.service;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineBuilder;
@@ -9,6 +13,11 @@ import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.vitramu.engine.excution.message.RabbitMqConfiguration.COMMAND_EXCHANGE_NAME;
 
 @Slf4j
 @Service
@@ -37,7 +46,10 @@ public class FlowStateMachineService {
         builder.configureStates()
                 .withStates()
                 .initial(Task.CREATE_START)
-                .state(Task.SAVE_REQUEST, dispatchCommandAction())
+                // TODO 需要调查
+                // 必须使用entry action下发command
+                // 实验表明，state action没有执行，具体原因需要调查
+                .state(Task.SAVE_REQUEST, dispatchCommandAction(), null)
                 .end(Task.END)
                 .fork(Task.CREATE_PARALLEL)
                 .join(Task.CREATE_FINISH)
@@ -67,12 +79,31 @@ public class FlowStateMachineService {
         osbsm.start();
     }
 
+
     private Action<Task, String> responseAction() {
-        return context -> log.info("Respond to trigger");
+        return context ->
+        {
+            log.info("Respond to trigger");
+        };
     }
 
+    @Autowired
+    ConnectionFactory connectionFactory;
     private Action<Task, String> dispatchCommandAction() {
-        return context -> log.info("Dispatching command");
+        return context -> {
+            log.info("Dispatching command");
+            Map<String, String> payload = new HashMap<>(4);
+            payload.put("data", "something");
+//            Gson gson = new Gson();
+            RabbitTemplate template = new RabbitTemplate(connectionFactory);
+            template.setExchange(COMMAND_EXCHANGE_NAME);
+            template.setMessageConverter(new Jackson2JsonMessageConverter());
+            template.convertAndSend("vitramu.service.service1", payload, m -> {
+                m.getMessageProperties().getHeaders().put("taskId", "T1");
+                m.getMessageProperties().setContentType("application/json");
+                return m;
+            });
+        };
     }
 
     private Guard<Task, String> createEwGuard() {
@@ -93,6 +124,10 @@ public class FlowStateMachineService {
             log.info("Exit State: {}", state.getIds());
         }
 
+    }
+
+    public void startFlowInstance(String flowId) {
+        log.info("starting flow: {}", flowId);
     }
 
     public void completeTask(String eventType) {
