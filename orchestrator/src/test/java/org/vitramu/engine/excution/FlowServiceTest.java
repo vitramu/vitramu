@@ -31,7 +31,6 @@ public class FlowServiceTest {
 
     @Before
     public void setUp() {
-        flowService = new FlowService(flowRepository, flowDefinitionRepository);
 
 
     }
@@ -75,15 +74,7 @@ public class FlowServiceTest {
                 .transactionId(flowInstanceId)
                 .data("")
                 .build();
-        Flow flowInstance = flowService.startFlowInstance(startEvent);
 
-        when(flowRepository.findFlowInstanceById(any())).thenReturn(flowInstance);
-        flowService.completeTask(flowInstanceId, "T1");
-
-        flowService.completeTask(flowInstanceId, "T2");
-        flowService.completeTask(flowInstanceId, "T3");
-        flowService.completeTask(flowInstanceId, "T4");
-        flowService.completeTask(flowInstanceId, "T5");
 
     }
 
@@ -128,14 +119,7 @@ public class FlowServiceTest {
                 .transactionId(flowInstanceId)
                 .data("")
                 .build();
-        Flow flowInstance = flowService.startFlowInstance(startEvent);
 
-        when(flowRepository.findFlowInstanceById(any())).thenReturn(flowInstance);
-        flowService.completeTask(flowInstanceId, "T1");
-        flowService.completeTask(flowInstanceId, "T2");
-        flowService.completeTask(flowInstanceId, "T3");
-        flowService.completeTask(flowInstanceId, "T4");
-        flowService.completeTask(flowInstanceId, "T5");
     }
     @Test
     public void completeTask() {

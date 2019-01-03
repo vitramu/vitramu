@@ -6,12 +6,12 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.vitramu.engine.definition.element.DefinitionType;
 import org.vitramu.engine.definition.element.TaskDefinition;
 import org.vitramu.engine.excution.instance.AbstractExcutableInstance;
-import org.vitramu.engine.excution.instance.TaskInstance;
+import org.vitramu.engine.excution.instance.ExcutableInstance;
 
 import java.util.EnumSet;
 import java.util.Set;
 
-public class Task extends AbstractExcutableInstance<TaskDefinition> implements TaskInstance {
+public class Task extends AbstractExcutableInstance<TaskDefinition> implements ExcutableInstance {
 
     private StateMachine<TaskState, TaskEvent> taskStateMachine;
 

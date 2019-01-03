@@ -13,15 +13,22 @@ import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 import org.springframework.stereotype.Service;
+import org.vitramu.engine.definition.FlowDefinitionRepository;
+import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.engine.excution.instance.Flow;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.vitramu.engine.excution.message.RabbitMqConfiguration.COMMAND_EXCHANGE_NAME;
 
 @Slf4j
 @Service
-public class FlowStateMachineService {
+public class FlowStateMachineService implements FlowService {
+
+    @Autowired
+    private FlowDefinitionRepository definitionRepository;
 
     public enum Task {
         CREATE_START,
@@ -89,6 +96,7 @@ public class FlowStateMachineService {
 
     @Autowired
     ConnectionFactory connectionFactory;
+
     private Action<Task, String> dispatchCommandAction() {
         return context -> {
             log.info("Dispatching command");
@@ -126,8 +134,26 @@ public class FlowStateMachineService {
 
     }
 
-    public void startFlowInstance(String flowId) {
-        log.info("starting flow: {}", flowId);
+    /**
+     * @param definitionId {String} flow definition which is to be started
+     */
+    @Override
+    public Flow startFlowInstance(String definitionId) {
+//        find flow definition
+//        generate new instanceId and create flow instance
+//        build statemachine instance specified by definitionId
+//        definitionId should be prototype statemachine id
+        log.info("starting flow: {}", definitionId);
+        FlowDefinition definition = definitionRepository.findFlowDefinitionById(definitionId);
+        UUID instanceId = UUID.randomUUID();
+        return new Flow(instanceId.toString());
+    }
+
+    @Override
+    public void completeTask(String definitionId, String instanceId, String taskId) {
+//        restore statemachine specified by definitionId to state of instance specified by instanceId
+//        send event to statemachine according to taskId
+
     }
 
     public void completeTask(String eventType) {

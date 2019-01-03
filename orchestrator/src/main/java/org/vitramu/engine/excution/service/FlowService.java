@@ -8,43 +8,10 @@ import org.vitramu.engine.excution.instance.Flow;
 
 /**
  * FlowService is used for rest controller or event listener and other application layer element to consume capability provided by Flow
- *
- * */
-@AllArgsConstructor
-@Service
-public class FlowService {
+ */
+public interface FlowService {
 
-    private FlowRepository flowRepository;
-    private FlowDefinitionRepository flowDefinitionRepository;
+    Flow startFlowInstance(String definitionId);
 
-
-    public Flow startFlowInstance(StartEvent starter) {
-        if(flowRepository.isStarted(starter.getTransactionId())) {
-            // flow instance with transactionId in starter as instance id already exists, do nothing
-
-            return null;
-        }
-        Flow flowInstance = Flow.builder()
-                .starter(starter)
-                .definition(flowDefinitionRepository.findFlowDefinitionById(starter.getFlowDefinitionId()))
-                .build();
-        flowInstance.start();
-        return flowInstance;
-    }
-
-    public void completeTask(String flowInstanceId, String taskId) {
-        Flow flowInstance = flowRepository.findFlowInstanceById(flowInstanceId);
-        flowInstance.completeTask(taskId);
-    }
-
-    public void abortTask(String flowInstanceId, String taskId) {
-        Flow flowInstance = flowRepository.findFlowInstanceById(flowInstanceId);
-        flowInstance.abortTask(taskId);
-    }
-
-    public void abortFlowInstance(String flowInstanceId) {
-        Flow flowInstance = flowRepository.findFlowInstanceById(flowInstanceId);
-        flowInstance.abort();
-    }
-
+    void completeTask(String definitionId, String instanceId, String taskId);
 }
