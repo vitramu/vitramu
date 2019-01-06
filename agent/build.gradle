@@ -5,11 +5,18 @@ plugins {
 
 
 jar {
-    baseName = 'vitramu-common'
+    baseName = 'vitramu-agent'
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter'
+    compile 'org.springframework.boot:spring-boot-starter-amqp'
+    compile 'org.springframework.boot:spring-boot-starter-cache'
+    compile 'org.springframework.boot:spring-boot-starter-json'
+    compile 'org.springframework.boot:spring-boot-starter-web-services'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+
+    compile project(":common")
 }
