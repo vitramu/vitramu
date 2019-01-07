@@ -24,7 +24,7 @@ public class FlowStateMachine {
     public static final String EVENT_INITIALIZED = "INITIALIZED";
 
 
-    public static StateMachine<Definition, String> newStateMachineInstance(ConnectionFactory connectionFactory) {
+    public static StateMachine<Definition, String> newStateMachineInstance(String machineId, ConnectionFactory connectionFactory) {
         FlowStateEntryAction entryAction = new FlowStateEntryAction(connectionFactory);
         FlowStateAction stateAction = new FlowStateAction();
         FlowStateExitAction exitAction = new FlowStateExitAction();
@@ -61,7 +61,7 @@ public class FlowStateMachine {
                     .and().withExternal().source(DefinitionState.CREATE_EW).target(DefinitionState.REFRESH_STATUS).event(DefinitionState.CREATE_EW.getName())
                     .and().withExternal().source(DefinitionState.REFRESH_STATUS).target(DefinitionState.END);
             builder.configureConfiguration()
-                    .withConfiguration().autoStartup(true);
+                    .withConfiguration().machineId(machineId);
 
             OSB_PUD_EW_SM = builder.build();
             OSB_PUD_EW_SM.addStateListener(new FlowEngineEventListener());

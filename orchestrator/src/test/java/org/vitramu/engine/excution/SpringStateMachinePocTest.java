@@ -37,7 +37,7 @@ public class SpringStateMachinePocTest {
 
     @Before
     public void setUp() {
-        osbsm = FlowStateMachine.newStateMachineInstance(connectionFactory);
+        osbsm = FlowStateMachine.newStateMachineInstance("F1", connectionFactory);
     }
 
     @Test
@@ -161,6 +161,7 @@ public class SpringStateMachinePocTest {
         log.info("Before restore: {}", osbsm.getState().getIds());
 
         //        Transaction A
+//        StateMachine<Definition, String> osbsm2 = FlowStateMachine.newStateMachineInstance(connectionFactory);
         persister.restore(osbsm, "BLOCKING_AFTER_OSB");
         log.info("After restore: {}", osbsm.getState().getIds());
         osbsm.sendEvent(DefinitionState.CREATE_PUD.getName());

@@ -21,11 +21,7 @@ import static org.vitramu.common.constant.MqConstant.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AgentTest {
-    public static final String FLOW_DEFINITION_ID = "F1";
-    public static final String FLOW_INSTANCE_ID = "F1-1";
-    public static final String FLOW_INSTANCE_ID_2 = "F1-2";
-    public static final String SERVICE_NAME = "service1";
-    public static final String SERVICE_INSTANCE_ID = "instance1";
+
 
     Gson gson;
 

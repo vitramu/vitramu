@@ -1,6 +1,7 @@
 package org.vitramu.engine.definition;
 
 import org.springframework.stereotype.Repository;
+import org.vitramu.common.constant.MqConstant;
 import org.vitramu.engine.definition.element.FlowDefinition;
 
 
@@ -8,6 +9,6 @@ import org.vitramu.engine.definition.element.FlowDefinition;
 public class FlowDefinitionRepository {
 
     public FlowDefinition findFlowDefinitionById(String definitionId) {
-        return null;
+        return FlowDefinition.builder().id(definitionId).build();
     }
 }

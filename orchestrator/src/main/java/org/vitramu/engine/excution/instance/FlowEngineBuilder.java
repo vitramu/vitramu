@@ -36,7 +36,7 @@ public class FlowEngineBuilder {
      */
     public StateMachine<Definition, String> build(FlowDefinition definition) {
         //  TODO build a new Statemachine according definition
-        StateMachine<Definition, String> sm = FlowStateMachine.newStateMachineInstance(connectionFactory);
+        StateMachine<Definition, String> sm = FlowStateMachine.newStateMachineInstance(definition.getId(), connectionFactory);
         return sm;
     }
 }

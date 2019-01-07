@@ -6,9 +6,10 @@ import org.vitramu.engine.definition.AbstractDefinition;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Builder
 public class FlowDefinition extends AbstractDefinition {
 
-
-
+    @Builder
+    public FlowDefinition(String id, String name) {
+        super(id, name, DefinitionType.FLOW);
+    }
 }
