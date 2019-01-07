@@ -1,8 +1,8 @@
-package org.vitramu.engine.excution.instance.statemachine.constant;
+package org.vitramu.engine.constant;
 
 import org.vitramu.engine.definition.element.TaskDefinition;
 
-public class TaskDefinitionState {
+public class DefinitionState {
     public static final TaskDefinition REQUEST_ARRIVED = new TaskDefinition("T1", "REQUEST_ARRIVED");
     public static final TaskDefinition REQUEST_SAVING = new TaskDefinition("T2", "REQUEST_SAVING");
     public static final TaskDefinition CREATE_PARALLEL = new TaskDefinition("T3", "CREATE_PARALLEL");

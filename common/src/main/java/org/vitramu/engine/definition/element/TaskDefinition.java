@@ -1,12 +1,18 @@
 package org.vitramu.engine.definition.element;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.vitramu.engine.definition.AbstractDefinition;
 
-
+@Getter
+@ToString(callSuper = true)
+@NoArgsConstructor
 public class TaskDefinition extends AbstractDefinition {
 
     private boolean deprecated = false;
+    @Setter
     private String description;
 
     @Setter
@@ -14,6 +20,7 @@ public class TaskDefinition extends AbstractDefinition {
 
 
     public TaskDefinition(String id, String name) {
-        super(id,name,DefinitionType.TASK);
+        super(id, name, DefinitionType.TASK);
     }
+
 }

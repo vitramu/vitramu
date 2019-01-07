@@ -1,47 +1,33 @@
-package org.vitramu.engine.excution.message;
+package org.vitramu.engine.excution.driver;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.handler.annotation.Headers;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.vitramu.engine.excution.service.FlowDriver;
 import org.vitramu.engine.excution.instance.FlowInstanceService;
+import org.vitramu.engine.excution.message.FlowMessage;
+import org.vitramu.engine.excution.message.StartMessage;
+import org.vitramu.engine.excution.message.TaskMessage;
 
+import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Optional;
+
+import static org.vitramu.common.constant.MqConstant.*;
 
 @Slf4j
 @Configuration
 @EnableRabbit
-public class RabbitMqConfiguration implements FlowDriver {
-    public static final String EVENT_EXCHANGE_NAME = "vitramu.exchange.event";
-    public static final String COMMAND_EXCHANGE_NAME = "vitramu.exchange.command";
-    public static final String TASK_QUEUE_NAME = "vitramu.orchestrator.task";
-    public static final String START_QUEUE_NAME = "vitramu.orchestrator.start";
-    public static final String EVENT_ROUTING_KEY = "vitramu.orchestrator.task";
-
-
-    @Bean("TaskQueue")
+public class RabbitMqDriver implements FlowDriver {
+    @Bean
     public Queue taskQueue() {
-        return new Queue(TASK_QUEUE_NAME, false);
-    }
-
-    @Bean("StartQueue")
-    public Queue startQueue() {
-        return new Queue(START_QUEUE_NAME, false);
+        return new Queue(EVENT_QUEUE_NAME, false);
     }
 
     @Bean("EventExchange")
@@ -55,18 +41,9 @@ public class RabbitMqConfiguration implements FlowDriver {
     }
 
     @Bean
-    public Binding binding(@Qualifier("TaskQueue") Queue queue, @Qualifier("EventExchange") DirectExchange exchange) {
+    public Binding taskMessageBinding(Queue queue, @Qualifier("EventExchange") DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(EVENT_ROUTING_KEY);
     }
-
-    @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(new Jackson2JsonMessageConverter());
-        return factory;
-    }
-
 
     @Autowired
     private FlowInstanceService flowService;
@@ -82,35 +59,44 @@ public class RabbitMqConfiguration implements FlowDriver {
      *                - taskInstanceId 表示执行的task实例，相当于local transaction id
      */
     @Override
-    @RabbitListener(queues = {TASK_QUEUE_NAME})
-    public void onTaskMessage(@Payload String payload, @Headers Map<String, Object> headers) {
-        log.info("receive message: {}", payload);
-        String taskInstanceId = UUID.randomUUID().toString();
-        TaskMessage taskMessage = TaskMessage.builder()
-                .flowDefinitionId((String) headers.get("flowDefinitionId"))
-                .flowInstanceId((String) headers.get("flowInstanceId"))
-                .taskInstanceId(taskInstanceId)
-                .taskName((String) headers.get("flowInstanceId"))
-                .aborted(Boolean.valueOf((String) headers.get("aborted")))
-                .build();
-        flowService.completeTask(taskMessage);
-    }
+    @RabbitListener(queues = {EVENT_QUEUE_NAME})
+    public void onMessage(final Message message) {
+        try {
+            Map<String, Object> headers = message.getMessageProperties().getHeaders();
+            byte[] body = message.getBody();
+            String encoding = Optional.ofNullable(message.getMessageProperties().getContentEncoding()).orElse(Charset.defaultCharset().name());
+            String contentType = Optional.ofNullable(message.getMessageProperties().getContentType()).orElse("application/json");
+            String payload = null;
+            JsonElement content = null;
+            payload = new String(body, encoding);
+            if (!contentType.contains("json")) {
+                log.error("unsupported message content type");
+            }
+            content = new JsonParser().parse(payload);
+            log.info("receive task message: {}", payload);
 
-    @Override
-    @RabbitListener(queues = {START_QUEUE_NAME})
-    public void onStartMessage(@Payload String payload, @Headers Map<String, Object> headers) {
-        log.info("receive message: {}", payload);
-        // flow instance started by start queue is always top level
-        String flowInstanceId = UUID.randomUUID().toString();
-        StartMessage start = StartMessage.builder()
-                .flowDefinitionId((String) headers.get("flowDefinitionId"))
-                .flowInstanceId(flowInstanceId)
-                .parentFlowInstanceId(null)
-                .serviceName((String) headers.get("serviceName"))
-                .serviceInstanceId((String) headers.get("serviceInstanceId"))
-                .body(new JsonParser().parse(payload))
-                .build();
-        flowService.startFlowInstance(start);
-    }
+            FlowMessage flowMessage = new FlowMessage((String) headers.get("flowDefinitionId"),
+                    (String) headers.get("flowInstanceId"),
+                    (String) headers.get("serviceName"),
+                    (String) headers.get("serviceInstanceId"),
+                    content
+            );
+            boolean isStart = (Boolean) Optional.ofNullable(headers.get("start")).orElse(false);
+            if (isStart) {
+                StartMessage start = StartMessage.builder(flowMessage).parentFlowInstanceId(null).build();
+                flowService.startFlowInstance(start);
+            } else {
+                boolean isAborted = (Boolean) Optional.ofNullable(headers.get("aborted")).orElse(false);
+                TaskMessage taskMessage = TaskMessage.builder(flowMessage)
+                        .taskInstanceId((String) headers.get("taskInstanceId"))
+                        .taskName((String) headers.get("taskName"))
+                        .aborted(isAborted)
+                        .build();
+                flowService.completeTask(taskMessage);
+            }
+        } catch (Exception e) {
+            log.error("rabbit listener exception", e);
+        }
 
+    }
 }

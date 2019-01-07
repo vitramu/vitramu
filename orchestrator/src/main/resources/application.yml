@@ -1,0 +1,7 @@
+logging:
+  level:
+    org:
+      springframework:
+        statemachine:
+          support:
+            LifecycleObjectSupport: ERROR

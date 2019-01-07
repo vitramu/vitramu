@@ -1,61 +1,94 @@
+# Orchestrator
+
 # 执行引擎
+执行引擎使用statemachine作为流程驱动核心。
+需要解决如下问题：
+- 根据新建的流程模型创建新的statemachine实例
+- 事务请求分派到不同流程的statemachine实例进行处理
+- 同一个statemachine实例处理同样的事务请求时进行复用
+- 同一个statemachine实例对并发的事务请求处理进行隔离
+- 已完成的事务请求的statemachine运行时信息的持久化
+- 支持事务请求重放
+- 执行引擎和下游服务直接的消息协调模型
+
+# 流程模型定义
+
+定义过程可以大致分为如下阶段：
+- 流程设计人员设计流程模型，以json文件或xml文件的格式进行提交（初步支持json格式，方便rest接口化）
+- 流程开发者将流程模型中的task和microservice实现的command进行绑定
+- 流程开发者开发部署实现了task的microservice
+- 流程开发者部署流程
+
+## 设计阶段
+这一阶段需要解决的问题：
+- 一个良定义的json格式对模型进行描述（优先级高）
+- 一个定义提交接口（优先级高）
+- 一个UI设计器
+
+## 绑定阶段
+这一阶段需要建立流程模型和微服务的实现之间的映射关系，解决的问题：
+- 微服务实现的复用
+
+## 部署微服务阶段
+这一阶段需要结合服务注册完成服务metadata的上报过程。
+这些metadata需要用来解决如下问题：
+- 协助orchestrator下发command到service
+- service执行command后发送回复消息，包括执行成功的回复和执行失败的回复两种情况
+- 协助orchestrator下发abort command到service
+- 建立service instance和orchestrator之间的reply channel，协助orchestrator返回reply消息
+
+# 执行过程定义
+## 基于状态机的抽象
+- state：流程运行阶段的抽象
+- compsite state：子流程的抽象
+- event：微服务执行命令结果的抽象
+- transition：流程运行阶段流转过程的抽象
+- fork pseudo state：并行任务split point的抽象
+- join pseudo state：并行子流程结束的synchronize point的抽象
+- choice pseduo state：分支流程decision point的抽象
+- end：流程结束过程，事务返回的抽象
 
 ## 消息监听
 执行引擎运行过程监听两种类型的消息：
-- StartEvent
-- TaskEvent
+- StartMessage：触发创建新的FlowInstance
+- TaskMessage：重建运行中的FlowInstance，向下一个状态进行转移
 
-StartEvent用来触发创建新的Flow Instance，然后交给执行引擎进行执行。  
-TaskEvent用来触发重建运行中的Flow Instance，然后交给执行引擎进行执行。  
-执行引擎执行一个Flow Instance的过程是按照Flow Definition以及Flow Instance执行上下文触发Flow Instance进行状态转移的过程。  
+### StartMessage
+一个StartMessage由微服务组装，通过消息中间件发送到orchestrator，包含如下信息：
+- flowDefinitionId：选择流程
+- flowInstanceId：本次事务的全局transaction id
+- parentFlowInstanceId：本次事务的父级全局transaction id，顶级事务的parentFlowInstanceId为null，否则一定时某个流程实例的某个中间状态的instanceId
+- serviceName
+- serviceInstanceId
+- body：输入流程的数据（高级特性，TBD）
 
+### TaskMessage
+一个TaskMessage由微服务组装，通过消息中间件发送到orchestrator，包含如下信息：
+- flowDefinitionId：选择流程
+- flowInstanceId：本次事务的全局transaction id
+- taskName：执行的task name，唯一性
+- taskInstanceId：本次task执行的local transaction id
+- aborted： 执行过程是否有异常，task执行异常会被abort
+- body：执行结果
 
-## 实例化过程
+### FlowInstance实例化过程
 
-1. StartEventListener接到StartEvent，触发实例化过程
-2. StartEvent.getFlowDefinitionId获取Flow Definition ID
-3. FlowDefinitionRepository.findFlowDefinitionById从数据库中加载出完整的FlowDefinition对象
-4. 一个FlowDefinition是一个Aggregate对象，拥有一个StartEvent Entity，一个TaskDefinition Entity List，一个Sequence Entity List，一个Gateway Entity List，一个EndEvent Entity
-5. FlowInstanceBuilder根据FlowDefinition和StartEvent进行FlowInstance的实例化
-6. StartEvent.getTransactionId获取本次请求的全局Transaction ID，并传递给FlowInstanceBuilder
-7. FlowInstanceBuilde新建一个FlowInstance对象，以全局Transaction ID作为FlowInstance的instanceId
-8. FlowInstanceBuilder把FlowDefinition作为新建的FlowInstance对象的definition属性
-9. FlowInstanceBuilder返回FlowInstance对象，实例化过程结束
+- event listener接到StartMessage
+- 提取flowDefinitionId，生成flowInstanceId
+- 以flowDefinitionId为machineId获取statemachine实例
+- 新获取statemachine实例处于初始状态
+- 向新获取的statemachine实例发送start事件
+- 以flowInstanceId为key，保存statemachine的context
+- 还原statemachine到初始状态
 
-## 执行过程
+### TaskMessage处理过程
 
-### Start过程
-1. StartEventListener接到StartEvent
-2. 通过StartEvent.getTransactionId获取StartEvent的全局Transaction ID
-3. FlowHistoryService.isFlowInstanceStarted判断Transaction ID对应的FlowInstance是否已经启动
-3.a 若已经启动，直接返回启动
-3.b 若没有启动，执行实例化过程
-4. 实例化过程结束，获得FlowInstance对象
-5. FlowInstance.findSequenceBySource(StartEvent)获取一个Sequence对象s
-6. 获取s.targetType
-    1. 若s.targetType是Task
-        1. FlowInstance生成一个Task Instance ID
-        2. 执行Task.excute(TaskInstanceId, Excution)
-    2. 若s.targetType是Gateway gw
-        1. FlowInstace.findSequenceBySource(Gateway)获取一个List<Sequence>对象
-        2. 若gw.type是Parallel
-            1. 遍历列表，每一个Sequence作为s执行STEP 6
-        3. 若gw.type是Exclusive
-            1. 遍历列表
-            2. 以使FlowInstace.Excution.calculate(Sequence)计算结果为true的Sequence对象为s，执行STEP6
-            3. 若没有使FlowInstace.Excution.calculate(Sequence)计算结果为true的Sequence对象，则以default值为true的Sequence为s，执行STEP6
-            4. 进行一轮标记过程
-        4. 若gw.type是Inclusive
-            1. 遍历列表
-            2. 以使FlowInstace.Excution.calculate(Sequence)计算结果为true的每一个Sequence对象为s，执行STEP6
-            3. 若没有使FlowInstace.Excution.calculate(Sequence)计算结果为true的Sequence对象，则以default值为true的Sequence为s，执行STEP6
-            4. 进行一轮标记过程
-        5. 若gw.type是Join
-            1. FlowInstance.findSequenceByTarget(Gateway)获取一个List<Sequence>对象
-            2. 若所有Sequence均被标记为BLACK，gw标记为BLACK，FlowInstace.findSequenceBySource(Gateway)获取一个List<Sequence>的每一个Sequence也标记为BLACK
-            3. 若存在Sequence被标记为RED或未标记，gw检查此类Sequence的excuted是否为true
-            4. 若全部为true，gw继续进行
-            5. 若存在false，gw等待执行或标记
-            
-### TaskEvent处理过程
-       
+- event listener接到TaskMessage
+- 提取flowDefinitionId和flowInstanceId，生成taskInstanceId
+- 以flowDefinitionId为machineId获取statemachine实例
+- 恢复statemachine实例至flowInstanceId为key的context
+- 根据TaskMessage构建event
+- 向statemachine发送event
+- 以flowInstanceId为key，保存statemachine的context
+- 还原statemachine到初始状态
+

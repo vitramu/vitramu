@@ -1,4 +1,6 @@
 package org.vitramu.engine.definition.element;
 
-public class ChoiceDefinition {
+import org.vitramu.engine.definition.AbstractDefinition;
+
+public class ChoiceDefinition extends AbstractDefinition {
 }

@@ -10,13 +10,13 @@ import java.util.stream.Collectors;
 public enum DefinitionType implements Type {
 
     FLOW("FLOW"),
+    COMMAND("COMMAND"),
+
     START("START"),
     TASK("TASK"),
-    COMMAND("COMMAND"),
-    GATEWAY_PARALLEL("PARALLEL"),
-    GATEWAY_EXCLUSIVE("EXCLUSIVE"),
-    GATEWAY_INCLUSIVE("INCLUSIVE"),
-    GATEWAY_JOIN("JOIN"),
+    FORK("FORK"),
+    CHOICE("CHOICE"),
+    JOIN("JOIN"),
     SEQUENCE("SEQUENCE"),
     END("END");
     private String name;

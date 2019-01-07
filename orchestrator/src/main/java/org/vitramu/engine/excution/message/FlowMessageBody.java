@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Data
 @JsonInclude
-public class Payload<T> {
+public class FlowMessageBody<T> {
 
     @Nullable
     @JsonProperty("meta")

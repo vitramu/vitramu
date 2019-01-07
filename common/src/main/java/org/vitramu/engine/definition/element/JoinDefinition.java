@@ -1,4 +1,6 @@
 package org.vitramu.engine.definition.element;
 
-public class JoinDefinition {
+import org.vitramu.engine.definition.AbstractDefinition;
+
+public class JoinDefinition extends AbstractDefinition {
 }

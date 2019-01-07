@@ -1,4 +1,24 @@
 package org.vitramu.engine.excution.action;
 
-public class FlowStateAction {
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.action.Action;
+import org.springframework.stereotype.Component;
+import org.vitramu.engine.definition.Definition;
+
+/**
+ * FlowStateAction 负责在下发command成功后对flow 当前 state 进行持久化
+ *
+ * @param <S>
+ * @param <E>
+ */
+@Slf4j
+@Component
+public class FlowStateAction implements Action<Definition, String>  {
+
+
+    @Override
+    public void execute(StateContext<Definition, String> context) {
+        log.info("excuting...");
+    }
 }

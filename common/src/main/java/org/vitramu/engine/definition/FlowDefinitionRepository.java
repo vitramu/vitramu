@@ -7,7 +7,7 @@ import org.vitramu.engine.definition.element.FlowDefinition;
 @Repository
 public class FlowDefinitionRepository {
 
-    public FlowDefinition findFlowDefinitionById(String flowId) {
+    public FlowDefinition findFlowDefinitionById(String definitionId) {
         return null;
     }
 }
