@@ -79,7 +79,8 @@ public class AgentTest {
 
     @Test
     public void testCompleteRequestSaving() throws InterruptedException {
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+//        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+        this.testStartSingleFlow();
         Thread.sleep(20);
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildTaskMessage("t1", DefinitionState.REQUEST_SAVING.getName(), m));
     }

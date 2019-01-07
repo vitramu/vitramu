@@ -4,12 +4,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.support.AbstractStateMachine;
 import org.springframework.statemachine.support.LifecycleObjectSupport;
 import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.element.FlowDefinition;
-import org.vitramu.engine.definition.element.TaskDefinition;
-import org.vitramu.engine.excution.instance.statemachine.FlowEngineFactory;
 
 /**
  * 封装flow definition和flow engine。当前engine是使用statemahcine实现的。
@@ -31,10 +28,13 @@ public class FlowInstance {
     @Setter
     private String startServiceInstanceId;
 
+    @Getter
     private FlowDefinition definition;
+
+    @Getter
     private StateMachine<Definition, String> engine;
 
-    public FlowInstance(FlowDefinition definition, String instanceId, String parentInstanceId, StateMachine<Definition, String> engine) {
+    public FlowInstance(FlowDefinition definition, StateMachine<Definition, String> engine, String instanceId, String parentInstanceId) {
         this.definition = definition;
         this.engine = engine;
         this.instanceId = instanceId;
@@ -56,12 +56,8 @@ public class FlowInstance {
         engine.sendEvent("INITIALIZED");
     }
 
-    public void pause() {
-        try {
-            FlowEngineFactory.persister.persist(engine, instanceId);
-        } catch (Exception e) {
-            log.error("pause exception", e);
-        }
+    public void stop() {
+        engine.stop();
     }
 
     public void completeTask(String taskInstanceId, String event) {

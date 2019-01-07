@@ -1,10 +1,11 @@
 package org.vitramu.engine.excution.instance;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Repository;
+import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.FlowDefinitionRepository;
-import org.vitramu.engine.excution.instance.statemachine.FlowEngineFactory;
+import org.vitramu.engine.definition.element.FlowDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,77 +16,38 @@ import java.util.Optional;
  * All cache and persistence related work should be done in this class.
  */
 @Repository
-public class FlowInstanceRepository implements CrudRepository<FlowInstance, String> {
+public class FlowInstanceRepository {
 
     @Autowired
     private FlowDefinitionRepository flowDefinitionRepository;
     @Autowired
-    private FlowEngineFactory flowFactory;
+    private FlowEngineRepository flowEngineRepository;
+
+    @Autowired
+    private FlowEngineBuilder flowEngineBuilder;
 
     private List<FlowInstance> repository = new ArrayList<>();
 
-    private String findFlowParentInstanceIdByInstanceId(String flowInstanceId) {
-        return null;
-    }
-
-    private String findFlowDefinitionIdByInstanceId(String flowInstanceId) {
-        return "PROTOTYPE";
-    }
-
-
-    @Override
-    public <S extends FlowInstance> S save(S entity) {
+    public FlowInstance save(FlowInstance entity) {
+        flowEngineRepository.save(entity.getEngine(), entity.getInstanceId());
         repository.add(entity);
         return entity;
     }
 
-    @Override
     public <S extends FlowInstance> Iterable<S> saveAll(Iterable<S> entities) {
         return null;
     }
 
-    @Override
-    public Optional<FlowInstance> findById(String flowInstanceId) {
-        return repository.stream().filter(instance -> instance.getInstanceId().equals(flowInstanceId)).findFirst();
+    public Optional<FlowInstance> findById(final String flowInstanceId) {
+        Optional<FlowInstance> storedInstaceOpt = repository.stream().filter(instance -> instance.getInstanceId().equals(flowInstanceId)).findFirst();
+        //        TODO dump implentation
+        storedInstaceOpt.ifPresent(instance -> repository.remove(instance));
+        return storedInstaceOpt.map(instance -> {
+            FlowDefinition definition = instance.getDefinition();
+            StateMachine<Definition, String> engine = flowEngineBuilder.build(instance.getDefinition());
+            flowEngineRepository.findByInstanceId(engine, flowInstanceId);
+            return new FlowInstance(definition, engine, flowInstanceId, instance.getParentInstanceId());
+        });
     }
 
-    @Override
-    public boolean existsById(String s) {
-        return false;
-    }
-
-    @Override
-    public Iterable<FlowInstance> findAll() {
-        return null;
-    }
-
-    @Override
-    public Iterable<FlowInstance> findAllById(Iterable<String> strings) {
-        return null;
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(String s) {
-
-    }
-
-    @Override
-    public void delete(FlowInstance entity) {
-
-    }
-
-    @Override
-    public void deleteAll(Iterable<? extends FlowInstance> entities) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
 }

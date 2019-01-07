@@ -1,4 +1,4 @@
-package org.vitramu.engine.excution.instance.statemachine;
+package org.vitramu.engine.excution.instance;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;

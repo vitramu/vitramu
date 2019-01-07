@@ -3,13 +3,19 @@ package org.vitramu.engine.excution.instance.statemachine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.StateMachineContext;
+import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.guard.Guard;
+import org.springframework.statemachine.persist.AbstractStateMachinePersister;
 import org.vitramu.engine.constant.DefinitionState;
 import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.excution.action.FlowStateAction;
 import org.vitramu.engine.excution.action.FlowStateEntryAction;
 import org.vitramu.engine.excution.action.FlowStateExitAction;
+import org.vitramu.engine.excution.instance.FlowEngineEventListener;
+
+import java.util.HashMap;
 
 @Slf4j
 public class FlowStateMachine {
@@ -54,6 +60,9 @@ public class FlowStateMachine {
                     .and().withChoice().source(DefinitionState.CHOICE_EW).first(DefinitionState.CREATE_EW, createEwGuard()).last(DefinitionState.REFRESH_STATUS)
                     .and().withExternal().source(DefinitionState.CREATE_EW).target(DefinitionState.REFRESH_STATUS).event(DefinitionState.CREATE_EW.getName())
                     .and().withExternal().source(DefinitionState.REFRESH_STATUS).target(DefinitionState.END);
+            builder.configureConfiguration()
+                    .withConfiguration().autoStartup(true);
+
             OSB_PUD_EW_SM = builder.build();
             OSB_PUD_EW_SM.addStateListener(new FlowEngineEventListener());
         } catch (Exception e) {
@@ -68,5 +77,26 @@ public class FlowStateMachine {
             log.info("evaluate ew guard");
             return true;
         };
+    }
+
+    public static class InMemoryStateMachinePersister<T> extends AbstractStateMachinePersister<T, String, String> {
+        public InMemoryStateMachinePersister() {
+            super(new InMemoryStateMachinePersist<T>());
+        }
+    }
+
+    public static class InMemoryStateMachinePersist<T> implements StateMachinePersist<T, String, String> {
+
+        private final HashMap<String, StateMachineContext<T, String>> contexts = new HashMap<>();
+
+        @Override
+        public void write(StateMachineContext<T, String> context, String contextObj) throws Exception {
+            contexts.put(contextObj, context);
+        }
+
+        @Override
+        public StateMachineContext<T, String> read(String contextObj) throws Exception {
+            return contexts.get(contextObj);
+        }
     }
 }

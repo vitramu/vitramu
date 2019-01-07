@@ -83,6 +83,7 @@ public class RabbitMqDriver implements FlowDriver {
             );
             boolean isStart = (Boolean) Optional.ofNullable(headers.get("start")).orElse(false);
             if (isStart) {
+                // TODO prevent start same instance multiple times
                 StartMessage start = StartMessage.builder(flowMessage).parentFlowInstanceId(null).build();
                 flowService.startFlowInstance(start);
             } else {

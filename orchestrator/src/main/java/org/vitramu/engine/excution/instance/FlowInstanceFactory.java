@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.FlowDefinitionRepository;
 import org.vitramu.engine.definition.element.FlowDefinition;
-import org.vitramu.engine.excution.instance.statemachine.FlowEngineFactory;
 
 /**
  * FlowInstanceFactory 提供根据flow definition id创建新的FlowInstance实例的能力。
@@ -17,13 +16,13 @@ public class FlowInstanceFactory {
 
     private FlowDefinitionRepository definitionRepository;
 
-    private FlowEngineFactory engineFactory;
+    private FlowEngineBuilder engineBuilder;
 
 
     @Autowired
-    public FlowInstanceFactory(FlowDefinitionRepository definitionRepository, FlowEngineFactory engineFactory) {
+    public FlowInstanceFactory(FlowDefinitionRepository definitionRepository, FlowEngineBuilder engineBuilder) {
         this.definitionRepository = definitionRepository;
-        this.engineFactory = engineFactory;
+        this.engineBuilder = engineBuilder;
     }
 
     /**
@@ -35,7 +34,7 @@ public class FlowInstanceFactory {
      */
     public FlowInstance build(String flowDefinitionId, String flowInstanceId) {
         FlowDefinition definition = definitionRepository.findFlowDefinitionById(flowDefinitionId);
-        StateMachine<Definition, String> engine = engineFactory.build(flowDefinitionId);
+        StateMachine<Definition, String> engine = engineBuilder.build(definition);
         return new FlowInstance(definition, engine, flowInstanceId);
     }
 

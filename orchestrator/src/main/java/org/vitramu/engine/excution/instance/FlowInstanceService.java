@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vitramu.engine.definition.FlowDefinitionRepository;
-import org.vitramu.engine.excution.instance.statemachine.FlowEngineFactory;
 import org.vitramu.engine.excution.message.StartMessage;
 import org.vitramu.engine.excution.message.TaskMessage;
 import org.vitramu.engine.excution.service.EventService;
@@ -24,7 +23,7 @@ public class FlowInstanceService {
 
 
     @Autowired
-    private FlowEngineFactory flowFactory;
+    private FlowEngineBuilder flowFactory;
 
     @Autowired
     private FlowInstanceFactory flowInstanceFactory;
@@ -47,15 +46,13 @@ public class FlowInstanceService {
         instance.setStartServiceName(start.getServiceName());
         instance.setStartServiceInstanceId(start.getServiceInstanceId());
         instance.start();
-
-        instance.pause();
         flowInstanceRepository.save(instance);
+        instance.stop();
 
     }
 
     public void completeTask(TaskMessage message) {
         // TODO use abstract class to encapsulate complete task message
-
         Optional<FlowInstance> instanceOpt = flowInstanceRepository.findById(message.getFlowInstanceId());
         // build event according taskId and task definition
         instanceOpt.ifPresent(instance -> {
@@ -64,7 +61,8 @@ public class FlowInstanceService {
             } else {
                 instance.completeTask(message.getTaskInstanceId(), message.getTaskName());
             }
-            instance.pause();
+            flowInstanceRepository.save(instance);
+            instance.stop();
         });
     }
 

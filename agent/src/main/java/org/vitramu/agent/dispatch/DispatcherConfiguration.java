@@ -45,8 +45,8 @@ public class DispatcherConfiguration {
         return BindingBuilder.bind(queue).to(exchange).with(SERVICE_ROUTING_KEY_SERVICE1);
     }
 
-    @RabbitListener(queues = {SERVICE_QUEUE_SERVICE1})
-    public void processTaskEvent(@Payload Map<String,String> data, @Header("taskId") String taskId) {
-        log.info("service receive taskId: {}, message: {}", taskId, data);
-    }
+//    @RabbitListener(queues = {SERVICE_QUEUE_SERVICE1})
+//    public void processTaskEvent(@Payload Map<String,String> data, @Header("taskId") String taskId) {
+//        log.info("service receive taskId: {}, message: {}", taskId, data);
+//    }
 }
