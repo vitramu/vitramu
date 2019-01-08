@@ -6,7 +6,6 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.redis.RedisStateMachinePersister;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import org.vitramu.engine.definition.Definition;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 @Slf4j
@@ -14,20 +13,20 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 public class FlowEngineRepository {
 
     @Autowired
-    private RedisStateMachinePersister<Definition, String> enginePersister;
+    private RedisStateMachinePersister<String, String> enginePersister;
 
     @Autowired
     public FlowEngineRepository(RedisStateMachinePersister enginePersister) {
         this.enginePersister = enginePersister;
     }
 
-    public StateMachine<Definition, String> save(StateMachine<Definition, String> engine, String flowInstanceId) {
+    public StateMachine<String, String> save(StateMachine<String, String> engine, String flowInstanceId) {
         saveInCache(engine, getContextKey(flowInstanceId));
         return engine;
     }
 
-    public StateMachine<Definition, String> findByInstanceId(StateMachine<Definition, String> engine, String flowInstanceId) {
-        StateMachine<Definition, String> resetEngine = loadFromCache(engine, flowInstanceId);
+    public StateMachine<String, String> findByInstanceId(StateMachine<String, String> engine, String flowInstanceId) {
+        StateMachine<String, String> resetEngine = loadFromCache(engine, flowInstanceId);
         if (null == resetEngine) {
             throw new NotImplementedException();
         }
@@ -41,7 +40,7 @@ public class FlowEngineRepository {
         return StringUtils.arrayToDelimitedString(new String[]{ENGINE_CONTEXT_NAMESPACE, flowInstanceId}, DELIM);
     }
 
-    private void saveInCache(StateMachine<Definition, String> engine, String flowInstanceId) {
+    private void saveInCache(StateMachine<String, String> engine, String flowInstanceId) {
         try {
             enginePersister.persist(engine, flowInstanceId);
         } catch (Exception e) {
@@ -49,9 +48,9 @@ public class FlowEngineRepository {
         }
     }
 
-    private StateMachine<Definition, String> loadFromCache(StateMachine<Definition, String> engine, String flowInstanceId) {
+    private StateMachine<String, String> loadFromCache(StateMachine<String, String> engine, String flowInstanceId) {
         // TODO check redis key
-        StateMachine<Definition, String> restoredEngine = null;
+        StateMachine<String, String> restoredEngine = null;
         try {
             restoredEngine = enginePersister.restore(engine, getContextKey(flowInstanceId));
         } catch (Exception e) {

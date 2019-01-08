@@ -8,7 +8,6 @@ import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
 import org.springframework.statemachine.redis.RedisStateMachineContextRepository;
 import org.springframework.statemachine.redis.RedisStateMachinePersister;
-import org.vitramu.engine.definition.Definition;
 
 @SpringBootApplication(scanBasePackages = {"org.vitramu.engine"})
 public class OrchestratorApplication {
@@ -20,15 +19,17 @@ public class OrchestratorApplication {
 
 
     @Bean
-    public StateMachinePersist<Definition, String, String> stateMachinePersist(RedisConnectionFactory connectionFactory) {
-        RedisStateMachineContextRepository<Definition, String> repository =
+    public StateMachinePersist<String, String, String> stateMachinePersist(RedisConnectionFactory connectionFactory) {
+        RedisStateMachineContextRepository<String, String> repository =
                 new RedisStateMachineContextRepository<>(connectionFactory);
         return new RepositoryStateMachinePersist<>(repository);
     }
 
     @Bean
-    public RedisStateMachinePersister<Definition, String> redisStateMachinePersister(
-            StateMachinePersist<Definition, String, String> stateMachinePersist) {
+    public RedisStateMachinePersister<String , String> redisStateMachinePersister(
+            StateMachinePersist<String, String, String> stateMachinePersist) {
         return new RedisStateMachinePersister<>(stateMachinePersist);
     }
+
+
 }

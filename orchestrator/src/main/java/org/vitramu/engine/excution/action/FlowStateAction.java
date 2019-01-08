@@ -14,11 +14,11 @@ import org.vitramu.engine.definition.Definition;
  */
 @Slf4j
 @Component
-public class FlowStateAction implements Action<Definition, String>  {
+public class FlowStateAction implements Action<String, String>  {
 
 
     @Override
-    public void execute(StateContext<Definition, String> context) {
+    public void execute(StateContext<String, String> context) {
         log.info("excuting...");
     }
 }

@@ -16,12 +16,9 @@ import org.springframework.statemachine.redis.RedisStateMachinePersister;
 import org.springframework.statemachine.state.State;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.vitramu.engine.constant.DefinitionState;
-import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.excution.instance.statemachine.FlowStateMachine;
 
 import java.util.Arrays;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Slf4j
@@ -32,7 +29,7 @@ public class SpringStateMachinePocTest {
 
     @Autowired
     private ConnectionFactory connectionFactory;
-    private StateMachine<Definition, String> osbsm;
+    private StateMachine<String, String> osbsm;
 
 
     @Before
@@ -91,13 +88,13 @@ public class SpringStateMachinePocTest {
         // TODO
     }
 
-    private String stateToString(State<Definition, String> state) {
-        return state.getIds().stream().map(Definition::getName).collect(toList()).toString();
+    private String stateToString(State<String, String> state) {
+        return state.getIds().toString();
     }
 
     @Test
     public void testStateMachinePersistInMemory() throws Exception {
-        FlowStateMachine.InMemoryStateMachinePersister<Definition> persister = new FlowStateMachine.InMemoryStateMachinePersister<>();
+        FlowStateMachine.InMemoryStateMachinePersister persister = new FlowStateMachine.InMemoryStateMachinePersister();
         //        Deployment
         osbsm.start();
         // TODO use statemachine pooling technical
@@ -127,17 +124,17 @@ public class SpringStateMachinePocTest {
         osbsm.sendEvent(DefinitionState.CREATE_EW.getName());
     }
 
-    public RedisStateMachinePersister<Definition, String> redisStateMachinePersister() {
-        RedisStateMachineContextRepository<Definition, String> repository =
+    public RedisStateMachinePersister<String, String> redisStateMachinePersister() {
+        RedisStateMachineContextRepository<String, String> repository =
                 new RedisStateMachineContextRepository<>(new JedisConnectionFactory());
-        StateMachinePersist<Definition, String, String> stateMachinePersist = new RepositoryStateMachinePersist<>(repository);
+        StateMachinePersist<String, String, String> stateMachinePersist = new RepositoryStateMachinePersist<>(repository);
         return new RedisStateMachinePersister<>(stateMachinePersist);
     }
 
     @Test
     public void testStateMachinePersistWithRedis() throws Exception {
         // TODO
-        RedisStateMachinePersister<Definition, String> persister = redisStateMachinePersister();
+        RedisStateMachinePersister<String, String> persister = redisStateMachinePersister();
 
         osbsm.start();
         // TODO use statemachine pooling technical
@@ -161,7 +158,7 @@ public class SpringStateMachinePocTest {
         log.info("Before restore: {}", osbsm.getState().getIds());
 
         //        Transaction A
-//        StateMachine<Definition, String> osbsm2 = FlowStateMachine.newStateMachineInstance(connectionFactory);
+//        StateMachine<String, String> osbsm2 = FlowStateMachine.newStateMachineInstance(connectionFactory);
         persister.restore(osbsm, "BLOCKING_AFTER_OSB");
         log.info("After restore: {}", osbsm.getState().getIds());
         osbsm.sendEvent(DefinitionState.CREATE_PUD.getName());

@@ -5,7 +5,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
-import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.element.FlowDefinition;
 import org.vitramu.engine.excution.instance.statemachine.FlowStateMachine;
 
@@ -34,9 +33,9 @@ public class FlowEngineBuilder {
      * @param definition
      * @return
      */
-    public StateMachine<Definition, String> build(FlowDefinition definition) {
+    public StateMachine<String, String> build(FlowDefinition definition) {
         //  TODO build a new Statemachine according definition
-        StateMachine<Definition, String> sm = FlowStateMachine.newStateMachineInstance(definition.getId(), connectionFactory);
+        StateMachine<String, String> sm = FlowStateMachine.newStateMachineInstance(definition.getId(), connectionFactory);
         return sm;
     }
 }

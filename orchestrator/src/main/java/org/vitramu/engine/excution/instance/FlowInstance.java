@@ -32,16 +32,16 @@ public class FlowInstance {
     private FlowDefinition definition;
 
     @Getter
-    private StateMachine<Definition, String> engine;
+    private StateMachine<String, String> engine;
 
-    public FlowInstance(FlowDefinition definition, StateMachine<Definition, String> engine, String instanceId, String parentInstanceId) {
+    public FlowInstance(FlowDefinition definition, StateMachine<String, String> engine, String instanceId, String parentInstanceId) {
         this.definition = definition;
         this.engine = engine;
         this.instanceId = instanceId;
         this.parentInstanceId = parentInstanceId;
     }
 
-    public FlowInstance(FlowDefinition definition, StateMachine<Definition, String> engine, String instanceId) {
+    public FlowInstance(FlowDefinition definition, StateMachine<String, String> engine, String instanceId) {
         this.instanceId = instanceId;
         this.definition = definition;
         this.engine = engine;

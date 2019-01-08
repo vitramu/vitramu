@@ -24,7 +24,7 @@ import static org.vitramu.common.constant.MqConstant.COMMAND_EXCHANGE_NAME;
  */
 @Slf4j
 @Component
-public class FlowStateEntryAction implements Action<Definition, String> {
+public class FlowStateEntryAction implements Action<String, String> {
 
     private ConnectionFactory connectionFactory;
 
@@ -34,13 +34,13 @@ public class FlowStateEntryAction implements Action<Definition, String> {
     }
 
     @Override
-    public void execute(StateContext<Definition, String> context) {
+    public void execute(StateContext<String, String> context) {
         // TODO this is test logic
         log.info("Entering...");
-        Definition def = context.getStateMachine().getState().getId();
-        if (DefinitionType.TASK.equals(def.getType())) {
-            excute((TaskDefinition) def);
-        }
+//        Definition def = context.getStateMachine().getState().getId();
+//        if (DefinitionType.TASK.equals(def.getType())) {
+//            excute((TaskDefinition) def);
+//        }
     }
 
     private void excute(TaskDefinition def) {

@@ -44,7 +44,7 @@ public class FlowInstanceRepository {
         storedInstaceOpt.ifPresent(instance -> repository.remove(instance));
         return storedInstaceOpt.map(instance -> {
             FlowDefinition definition = instance.getDefinition();
-            StateMachine<Definition, String> engine = flowEngineBuilder.build(instance.getDefinition());
+            StateMachine<String, String> engine = flowEngineBuilder.build(instance.getDefinition());
             flowEngineRepository.findByInstanceId(engine, flowInstanceId);
             return new FlowInstance(definition, engine, flowInstanceId, instance.getParentInstanceId());
         });

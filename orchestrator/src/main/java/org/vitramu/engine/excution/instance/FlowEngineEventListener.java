@@ -8,15 +8,15 @@ import org.vitramu.engine.definition.Definition;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class FlowEngineEventListener extends StateMachineListenerAdapter<Definition, String> {
+public class FlowEngineEventListener extends StateMachineListenerAdapter<String, String> {
     @Override
-    public void stateEntered(State<Definition, String> state) {
-        log.info("Enter State: {}", state.getIds().stream().map(t -> t.getName()).collect(toList()));
+    public void stateEntered(State<String, String> state) {
+        log.info("Enter State: {}", state.getIds());
     }
 
     @Override
-    public void stateExited(State<Definition, String> state) {
-        log.info("Exit State: {}", state.getIds().stream().map(t -> t.getName()).collect(toList()));
+    public void stateExited(State<String, String> state) {
+        log.info("Exit State: {}", state.getIds());
     }
 
 }

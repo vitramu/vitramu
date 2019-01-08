@@ -8,9 +8,9 @@ import org.vitramu.engine.definition.Definition;
 
 @Slf4j
 @Component
-public class FlowTransitionErrorAction implements Action<Definition, String> {
+public class FlowTransitionErrorAction implements Action<String, String> {
     @Override
-    public void execute(StateContext<Definition, String> context) {
+    public void execute(StateContext<String, String> context) {
         log.error("excuting error...");
 //        TODO default flow transition error action
 //        abort every executed task ordered by exit time reverse

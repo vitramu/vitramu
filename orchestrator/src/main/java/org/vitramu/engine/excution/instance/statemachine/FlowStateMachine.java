@@ -9,7 +9,6 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.persist.AbstractStateMachinePersister;
 import org.vitramu.engine.constant.DefinitionState;
-import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.excution.action.FlowStateAction;
 import org.vitramu.engine.excution.action.FlowStateEntryAction;
 import org.vitramu.engine.excution.action.FlowStateExitAction;
@@ -24,42 +23,42 @@ public class FlowStateMachine {
     public static final String EVENT_INITIALIZED = "INITIALIZED";
 
 
-    public static StateMachine<Definition, String> newStateMachineInstance(String machineId, ConnectionFactory connectionFactory) {
+    public static StateMachine<String, String> newStateMachineInstance(String machineId, ConnectionFactory connectionFactory) {
         FlowStateEntryAction entryAction = new FlowStateEntryAction(connectionFactory);
         FlowStateAction stateAction = new FlowStateAction();
         FlowStateExitAction exitAction = new FlowStateExitAction();
 
-        StateMachine<Definition, String> OSB_PUD_EW_SM = null;
+        StateMachine<String, String> OSB_PUD_EW_SM = null;
         try {
-            StateMachineBuilder.Builder<Definition, String> builder = StateMachineBuilder.builder();
+            StateMachineBuilder.Builder<String, String> builder = StateMachineBuilder.builder();
             builder.configureStates()
                     .withStates()
-                    .initial(DefinitionState.REQUEST_ARRIVED)
-                    .state(DefinitionState.REQUEST_SAVING, entryAction, exitAction)
-                    .end(DefinitionState.END)
-                    .fork(DefinitionState.CREATE_PARALLEL)
-                    .join(DefinitionState.CREATE_FINISH)
-                    .choice(DefinitionState.CHOICE_EW)
-                    .state(DefinitionState.CREATE_BOOKING, entryAction, exitAction)
+                    .initial(DefinitionState.REQUEST_ARRIVED.getName())
+                    .state(DefinitionState.REQUEST_SAVING.getName(), entryAction, exitAction)
+                    .end(DefinitionState.END.getName())
+                    .fork(DefinitionState.CREATE_PARALLEL.getName())
+                    .join(DefinitionState.CREATE_FINISH.getName())
+                    .choice(DefinitionState.CHOICE_EW.getName())
+                    .state(DefinitionState.CREATE_BOOKING.getName(), entryAction, exitAction)
                     .and()
                     .withStates()
-                    .parent(DefinitionState.CREATE_BOOKING).initial(DefinitionState.CREATE_OSB).state(DefinitionState.CREATE_OSB, entryAction, exitAction).end(DefinitionState.END_OSB)
+                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_OSB.getName()).state(DefinitionState.CREATE_OSB.getName(), entryAction, exitAction).end(DefinitionState.END_OSB.getName())
                     .and()
                     .withStates()
-                    .parent(DefinitionState.CREATE_BOOKING).initial(DefinitionState.CREATE_PUD).state(DefinitionState.CREATE_PUD, entryAction, exitAction).end(DefinitionState.END_PUD)
+                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_PUD.getName()).state(DefinitionState.CREATE_PUD.getName(), entryAction, exitAction).end(DefinitionState.END_PUD.getName())
                     .and()
-                    .withStates().state(DefinitionState.CREATE_EW, entryAction, exitAction).state(DefinitionState.REFRESH_STATUS, entryAction, exitAction);
+                    .withStates().state(DefinitionState.CREATE_EW.getName(), entryAction, exitAction).state(DefinitionState.REFRESH_STATUS.getName(), entryAction, exitAction);
             builder.configureTransitions()
-                    .withExternal().source(DefinitionState.REQUEST_ARRIVED).target(DefinitionState.REQUEST_SAVING).event(EVENT_INITIALIZED)
-                    .and().withExternal().source(DefinitionState.REQUEST_SAVING).target(DefinitionState.CREATE_PARALLEL).event(DefinitionState.REQUEST_SAVING.getName())
-                    .and().withFork().source(DefinitionState.CREATE_PARALLEL).target(DefinitionState.CREATE_OSB).target(DefinitionState.CREATE_PUD)
-                    .and().withExternal().source(DefinitionState.CREATE_OSB).target(DefinitionState.END_OSB).event(DefinitionState.CREATE_OSB.getName())
-                    .and().withExternal().source(DefinitionState.CREATE_PUD).target(DefinitionState.END_PUD).event(DefinitionState.CREATE_PUD.getName())
-                    .and().withJoin().source(DefinitionState.END_OSB).source(DefinitionState.END_PUD).target(DefinitionState.CREATE_FINISH)
-                    .and().withExternal().source(DefinitionState.CREATE_FINISH).target(DefinitionState.CHOICE_EW)
-                    .and().withChoice().source(DefinitionState.CHOICE_EW).first(DefinitionState.CREATE_EW, createEwGuard()).last(DefinitionState.REFRESH_STATUS)
-                    .and().withExternal().source(DefinitionState.CREATE_EW).target(DefinitionState.REFRESH_STATUS).event(DefinitionState.CREATE_EW.getName())
-                    .and().withExternal().source(DefinitionState.REFRESH_STATUS).target(DefinitionState.END);
+                    .withExternal().source(DefinitionState.REQUEST_ARRIVED.getName()).target(DefinitionState.REQUEST_SAVING.getName()).event(EVENT_INITIALIZED)
+                    .and().withExternal().source(DefinitionState.REQUEST_SAVING.getName()).target(DefinitionState.CREATE_PARALLEL.getName()).event(DefinitionState.REQUEST_SAVING.getName())
+                    .and().withFork().source(DefinitionState.CREATE_PARALLEL.getName()).target(DefinitionState.CREATE_OSB.getName()).target(DefinitionState.CREATE_PUD.getName())
+                    .and().withExternal().source(DefinitionState.CREATE_OSB.getName()).target(DefinitionState.END_OSB.getName()).event(DefinitionState.CREATE_OSB.getName())
+                    .and().withExternal().source(DefinitionState.CREATE_PUD.getName()).target(DefinitionState.END_PUD.getName()).event(DefinitionState.CREATE_PUD.getName())
+                    .and().withJoin().source(DefinitionState.END_OSB.getName()).source(DefinitionState.END_PUD.getName()).target(DefinitionState.CREATE_FINISH.getName())
+                    .and().withExternal().source(DefinitionState.CREATE_FINISH.getName()).target(DefinitionState.CHOICE_EW.getName())
+                    .and().withChoice().source(DefinitionState.CHOICE_EW.getName()).first(DefinitionState.CREATE_EW.getName(), createEwGuard()).last(DefinitionState.REFRESH_STATUS.getName())
+                    .and().withExternal().source(DefinitionState.CREATE_EW.getName()).target(DefinitionState.REFRESH_STATUS.getName()).event(DefinitionState.CREATE_EW.getName())
+                    .and().withExternal().source(DefinitionState.REFRESH_STATUS.getName()).target(DefinitionState.END.getName());
             builder.configureConfiguration()
                     .withConfiguration().machineId(machineId);
 
@@ -72,16 +71,16 @@ public class FlowStateMachine {
 
     }
 
-    private static Guard<Definition, String> createEwGuard() {
+    private static Guard<String, String> createEwGuard() {
         return context -> {
             log.info("evaluate ew guard");
             return true;
         };
     }
 
-    public static class InMemoryStateMachinePersister<T> extends AbstractStateMachinePersister<T, String, String> {
+    public static class InMemoryStateMachinePersister extends AbstractStateMachinePersister<String, String, String> {
         public InMemoryStateMachinePersister() {
-            super(new InMemoryStateMachinePersist<T>());
+            super(new InMemoryStateMachinePersist());
         }
     }
 

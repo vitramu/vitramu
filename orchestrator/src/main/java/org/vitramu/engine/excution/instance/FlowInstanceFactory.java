@@ -34,7 +34,7 @@ public class FlowInstanceFactory {
      */
     public FlowInstance build(String flowDefinitionId, String flowInstanceId) {
         FlowDefinition definition = definitionRepository.findFlowDefinitionById(flowDefinitionId);
-        StateMachine<Definition, String> engine = engineBuilder.build(definition);
+        StateMachine<String, String> engine = engineBuilder.build(definition);
         return new FlowInstance(definition, engine, flowInstanceId);
     }
 

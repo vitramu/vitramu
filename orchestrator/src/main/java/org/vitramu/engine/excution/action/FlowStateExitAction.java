@@ -15,12 +15,12 @@ import org.vitramu.engine.definition.Definition;
  */
 @Slf4j
 @Component
-public class FlowStateExitAction implements Action<Definition, String> {
+public class FlowStateExitAction implements Action<String, String> {
 
     private ConnectionFactory connectionFactory;
 
     @Override
-    public void execute(StateContext<Definition, String> context) {
+    public void execute(StateContext<String, String> context) {
         // TODO this is test logic
         // dispatch command
         log.info("Exiting...");
