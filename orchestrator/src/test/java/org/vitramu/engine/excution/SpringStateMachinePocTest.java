@@ -2,6 +2,7 @@ package org.vitramu.engine.excution;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -74,10 +75,12 @@ public class SpringStateMachinePocTest {
         osbsm.sendEvent(DefinitionState.CREATE_PUD.getName());
     }
 
+
+    @Ignore
     @Test
     public void testChoice() {
         osbsm.start();
-        String[] events = new String[]{"INITIALIZED", DefinitionState.REQUEST_SAVING.getName(), DefinitionState.CREATE_OSB.getName(), DefinitionState.CREATE_PUD.getName(), DefinitionState.CREATE_EW.getName()};
+        String[] events = new String[]{"INITIALIZED", DefinitionState.REQUEST_SAVING.getName(), DefinitionState.CREATE_OSB.getName(), DefinitionState.CREATE_PUD.getName()/*, DefinitionState.CREATE_EW.getName() */};
         Arrays.stream(events)
                 .forEach(event -> osbsm.sendEvent(event));
     }
@@ -121,7 +124,7 @@ public class SpringStateMachinePocTest {
         persister.restore(osbsm, "BLOCKING_AFTER_OSB");
         log.info("After restore: {}", stateToString(osbsm.getState()));
         osbsm.sendEvent(DefinitionState.CREATE_PUD.getName());
-        osbsm.sendEvent(DefinitionState.CREATE_EW.getName());
+//        osbsm.sendEvent(DefinitionState.CREATE_EW.getName());
     }
 
     public RedisStateMachinePersister<String, String> redisStateMachinePersister() {
@@ -162,7 +165,7 @@ public class SpringStateMachinePocTest {
         persister.restore(osbsm, "BLOCKING_AFTER_OSB");
         log.info("After restore: {}", osbsm.getState().getIds());
         osbsm.sendEvent(DefinitionState.CREATE_PUD.getName());
-        osbsm.sendEvent(DefinitionState.CREATE_EW.getName());
+//        osbsm.sendEvent(DefinitionState.CREATE_EW.getName());
     }
 
     @Test

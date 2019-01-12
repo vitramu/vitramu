@@ -38,16 +38,16 @@ public class FlowStateMachine {
                     .end(DefinitionState.END.getName())
                     .fork(DefinitionState.CREATE_PARALLEL.getName())
                     .join(DefinitionState.CREATE_FINISH.getName())
-                    .choice(DefinitionState.CHOICE_EW.getName())
+//                    .choice(DefinitionState.CHOICE_EW.getName())
                     .state(DefinitionState.CREATE_BOOKING.getName(), entryAction, exitAction)
                     .and()
                     .withStates()
                     .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_OSB.getName()).state(DefinitionState.CREATE_OSB.getName(), entryAction, exitAction).end(DefinitionState.END_OSB.getName())
                     .and()
                     .withStates()
-                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_PUD.getName()).state(DefinitionState.CREATE_PUD.getName(), entryAction, exitAction).end(DefinitionState.END_PUD.getName())
-                    .and()
-                    .withStates().state(DefinitionState.CREATE_EW.getName(), entryAction, exitAction).state(DefinitionState.REFRESH_STATUS.getName(), entryAction, exitAction);
+                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_PUD.getName()).state(DefinitionState.CREATE_PUD.getName(), entryAction, exitAction).end(DefinitionState.END_PUD.getName());
+//                    .and()
+//                    .withStates().state(DefinitionState.CREATE_EW.getName(), entryAction, exitAction).state(DefinitionState.REFRESH_STATUS.getName(), entryAction, exitAction);
             builder.configureTransitions()
                     .withExternal().source(DefinitionState.REQUEST_ARRIVED.getName()).target(DefinitionState.REQUEST_SAVING.getName()).event(EVENT_INITIALIZED)
                     .and().withExternal().source(DefinitionState.REQUEST_SAVING.getName()).target(DefinitionState.CREATE_PARALLEL.getName()).event(DefinitionState.REQUEST_SAVING.getName())
@@ -55,9 +55,10 @@ public class FlowStateMachine {
                     .and().withExternal().source(DefinitionState.CREATE_OSB.getName()).target(DefinitionState.END_OSB.getName()).event(DefinitionState.CREATE_OSB.getName())
                     .and().withExternal().source(DefinitionState.CREATE_PUD.getName()).target(DefinitionState.END_PUD.getName()).event(DefinitionState.CREATE_PUD.getName())
                     .and().withJoin().source(DefinitionState.END_OSB.getName()).source(DefinitionState.END_PUD.getName()).target(DefinitionState.CREATE_FINISH.getName())
-                    .and().withExternal().source(DefinitionState.CREATE_FINISH.getName()).target(DefinitionState.CHOICE_EW.getName())
-                    .and().withChoice().source(DefinitionState.CHOICE_EW.getName()).first(DefinitionState.CREATE_EW.getName(), createEwGuard()).last(DefinitionState.REFRESH_STATUS.getName())
-                    .and().withExternal().source(DefinitionState.CREATE_EW.getName()).target(DefinitionState.REFRESH_STATUS.getName()).event(DefinitionState.CREATE_EW.getName())
+//                    .and().withExternal().source(DefinitionState.CREATE_FINISH.getName()).target(DefinitionState.CHOICE_EW.getName())
+//                    .and().withChoice().source(DefinitionState.CHOICE_EW.getName()).first(DefinitionState.CREATE_EW.getName(), createEwGuard()).last(DefinitionState.REFRESH_STATUS.getName())
+//                    .and().withExternal().source(DefinitionState.CREATE_EW.getName()).target(DefinitionState.REFRESH_STATUS.getName()).event(DefinitionState.CREATE_EW.getName())
+                    .and().withExternal().source(DefinitionState.CREATE_FINISH.getName()).target(DefinitionState.REFRESH_STATUS.getName())
                     .and().withExternal().source(DefinitionState.REFRESH_STATUS.getName()).target(DefinitionState.END.getName());
             builder.configureConfiguration()
                     .withConfiguration().machineId(machineId);
