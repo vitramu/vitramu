@@ -46,7 +46,6 @@ public class FlowInstanceServiceTest {
                 .serviceInstanceId(SERVICE_INSTANCE_ID)
                 .body(new JsonParser().parse(payload))
                 .build();
-        flowInstanceService.startFlowInstance(start);
     }
 
     @Test
@@ -60,7 +59,6 @@ public class FlowInstanceServiceTest {
                 .taskName(DefinitionState.REQUEST_SAVING.getName())
                 .aborted(false)
                 .build();
-        flowInstanceService.completeTask(taskMessage);
     }
 
     @Test
@@ -74,7 +72,6 @@ public class FlowInstanceServiceTest {
                 .taskName(DefinitionState.CREATE_OSB.getName())
                 .aborted(false)
                 .build();
-        flowInstanceService.completeTask(taskMessage);
     }
 
     @Test
@@ -88,7 +85,6 @@ public class FlowInstanceServiceTest {
                 .taskName(DefinitionState.CREATE_PUD.getName())
                 .aborted(false)
                 .build();
-        flowInstanceService.completeTask(taskMessage);
     }
 
     @Test
@@ -102,7 +98,6 @@ public class FlowInstanceServiceTest {
                 .serviceInstanceId(SERVICE_INSTANCE_ID)
                 .body(new JsonParser().parse(payload))
                 .build();
-        flowInstanceService.startFlowInstance(start);
 
         StartMessage start2 = StartMessage.builder()
                 .flowDefinitionId(FLOW_DEFINITION_ID)
@@ -112,6 +107,5 @@ public class FlowInstanceServiceTest {
                 .serviceInstanceId(SERVICE_INSTANCE_ID)
                 .body(new JsonParser().parse(payload))
                 .build();
-        flowInstanceService.startFlowInstance(start2);
     }
 }

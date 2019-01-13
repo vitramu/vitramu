@@ -6,7 +6,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.vitramu.engine.excution.instance.RedisStateMachineContextCache;
 
 @Configuration
 public class FlowEngineRedisConfig {
@@ -25,21 +24,4 @@ public class FlowEngineRedisConfig {
         return template;
     }
 
-    @Bean
-    public RedisStateMachineContextCache contextRepository(RedisTemplate<String, byte[]> contextTemplate) {
-        RedisStateMachineContextCache repository =
-                new RedisStateMachineContextCache(contextTemplate);
-        return repository;
-    }
-
-//    @Bean
-//    public StateMachinePersist<String, String, String> stateMachinePersist(RedisStateMachineContextCache repository) {
-//        return new RepositoryStateMachinePersist<>(repository);
-//    }
-
-//    @Bean
-//    public RedisStateMachinePersister<String, String> redisStateMachinePersister(
-//            StateMachinePersist<String, String, String> stateMachinePersist) {
-//        return new RedisStateMachinePersister<>(stateMachinePersist);
-//    }
 }

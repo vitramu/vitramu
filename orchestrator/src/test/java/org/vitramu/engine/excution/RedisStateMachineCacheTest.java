@@ -9,13 +9,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.persist.RepositoryStateMachinePersist;
 import org.springframework.statemachine.persist.StateMachinePersister;
 import org.springframework.statemachine.redis.RedisStateMachinePersister;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.client.RestTemplate;
 import org.vitramu.engine.excution.instance.RedisStateMachineContextCache;
 
 @Slf4j

@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.support.LifecycleObjectSupport;
 import org.vitramu.engine.definition.element.FlowDefinition;
 
 /**
@@ -17,6 +15,7 @@ public class FlowInstance {
 
     @Getter
     private final String instanceId;
+
     @Getter
     @Setter
     private String parentInstanceId;
@@ -29,36 +28,31 @@ public class FlowInstance {
     private String startServiceInstanceId;
 
     @Getter
+    @Setter
     private FlowDefinition definition;
 
     @Getter
-    private StateMachine<String, String> engine;
+    @Setter
+    private FlowEngine engine;
 
-    public FlowInstance(@NonNull FlowDefinition definition, @NonNull StateMachine<String, String> engine, String instanceId, String parentInstanceId) {
-        this.definition = definition;
-        this.engine = engine;
+    public FlowInstance(@NonNull String instanceId) {
         this.instanceId = instanceId;
-        this.parentInstanceId = parentInstanceId;
     }
 
-    public FlowInstance(@NonNull FlowDefinition definition, @NonNull StateMachine<String, String> engine, @NonNull String instanceId) {
+    public FlowInstance(String instanceId, @NonNull FlowDefinition definition, @NonNull FlowEngine engine) {
         this.instanceId = instanceId;
         this.definition = definition;
         this.engine = engine;
     }
 
-    public boolean isRunning() {
-        // TODO this is hack code, try to refactor
-        return ((LifecycleObjectSupport) engine).isRunning();
+    public boolean isEnded() {
+        return false;
     }
 
     public void start() {
         engine.sendEvent("INITIALIZED");
     }
 
-    public void stop() {
-//        engine.stop();
-    }
 
     public void completeTask(String taskInstanceId, String event) {
         // TODO       find definitionId by instanceId
