@@ -41,18 +41,18 @@ public class AgentTest {
 
     private Message buildStartMessage(String flowInstanceId, Message m) {
         Map<String, Object> headers = m.getMessageProperties().getHeaders();
-        headers.put("flowDefinitionId", FLOW_DEFINITION_ID);
-        headers.put("flowInstanceId", FLOW_INSTANCE_ID);
+        headers.put("flowDefinitionId", "SM-MongoDB-1");
+        headers.put("flowInstanceId", flowInstanceId);
         headers.put("start", true);
         headers.put("serviceName", SERVICE_NAME);
         headers.put("serviceInstanceId", SERVICE_INSTANCE_ID);
         return m;
     }
 
-    private Message buildTaskMessage(String taskInstanceId, String taskName, Message m) {
+    private Message buildTaskMessage(String flowInstanceId, String taskInstanceId, String taskName, Message m) {
         Map<String, Object> headers = m.getMessageProperties().getHeaders();
-        headers.put("flowDefinitionId", FLOW_DEFINITION_ID);
-        headers.put("flowInstanceId", FLOW_INSTANCE_ID);
+        headers.put("flowDefinitionId", "SM-MongoDB-1");
+        headers.put("flowInstanceId", flowInstanceId);
         headers.put("serviceName", SERVICE_NAME);
         headers.put("serviceInstanceId", SERVICE_INSTANCE_ID);
         headers.put("taskInstanceId", taskInstanceId);
@@ -63,22 +63,20 @@ public class AgentTest {
     @Test
     public void testStartSingleFlow() {
 //        String payload = gson.toJson(new Object());
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
     }
 
 
     @Test
     public void testStartSingleFlowMutipleTimes() {
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new Object(), m -> buildStartMessage(FLOW_INSTANCE_ID_2, m));
     }
 
     @Test
     public void testCompleteRequestSaving() throws InterruptedException {
-//        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
-        this.testStartSingleFlow();
-        Thread.sleep(20);
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String,Object>(), m -> buildTaskMessage("t1", DefinitionState.REQUEST_SAVING.getName(), m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_SAVING.getName(), m));
     }
 
     @Test
@@ -99,5 +97,17 @@ public class AgentTest {
     @Test
     public void testCompleteRefreshStatus() {
 
+    }
+
+    @Test
+    public void testTwoInstanceSwitch() {
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID_2, m));
+
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID_2, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
+
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_SAVING.getName(), m));
+        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID_2, "t1", DefinitionState.REQUEST_SAVING.getName(), m));
     }
 }

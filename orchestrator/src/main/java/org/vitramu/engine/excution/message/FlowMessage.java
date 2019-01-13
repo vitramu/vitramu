@@ -2,7 +2,6 @@ package org.vitramu.engine.excution.message;
 
 import com.google.gson.JsonElement;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 

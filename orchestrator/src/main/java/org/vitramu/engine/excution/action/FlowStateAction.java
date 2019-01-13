@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
-import org.vitramu.engine.definition.Definition;
 
 /**
  * FlowStateAction 负责在下发command成功后对flow 当前 state 进行持久化

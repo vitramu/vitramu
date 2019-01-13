@@ -15,9 +15,6 @@
  */
 package org.vitramu.engine.excution.instance.statemachine;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.access.StateMachineAccess;
@@ -29,6 +26,9 @@ import org.springframework.statemachine.support.LifecycleObjectSupport;
 import org.springframework.statemachine.support.StateMachineInterceptorAdapter;
 import org.springframework.statemachine.transition.Transition;
 import org.springframework.util.Assert;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * {@code PersistStateMachineHandler} is a recipe which can be used to

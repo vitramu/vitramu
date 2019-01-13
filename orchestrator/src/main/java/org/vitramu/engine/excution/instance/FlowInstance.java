@@ -1,11 +1,11 @@
 package org.vitramu.engine.excution.instance;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.support.LifecycleObjectSupport;
-import org.vitramu.engine.definition.Definition;
 import org.vitramu.engine.definition.element.FlowDefinition;
 
 /**
@@ -34,14 +34,14 @@ public class FlowInstance {
     @Getter
     private StateMachine<String, String> engine;
 
-    public FlowInstance(FlowDefinition definition, StateMachine<String, String> engine, String instanceId, String parentInstanceId) {
+    public FlowInstance(@NonNull FlowDefinition definition, @NonNull StateMachine<String, String> engine, String instanceId, String parentInstanceId) {
         this.definition = definition;
         this.engine = engine;
         this.instanceId = instanceId;
         this.parentInstanceId = parentInstanceId;
     }
 
-    public FlowInstance(FlowDefinition definition, StateMachine<String, String> engine, String instanceId) {
+    public FlowInstance(@NonNull FlowDefinition definition, @NonNull StateMachine<String, String> engine, @NonNull String instanceId) {
         this.instanceId = instanceId;
         this.definition = definition;
         this.engine = engine;
@@ -57,7 +57,7 @@ public class FlowInstance {
     }
 
     public void stop() {
-        engine.stop();
+//        engine.stop();
     }
 
     public void completeTask(String taskInstanceId, String event) {

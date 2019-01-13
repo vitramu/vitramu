@@ -5,7 +5,6 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
-import org.vitramu.engine.definition.Definition;
 
 /**
  * FlowStateExitAction 对微服务返回的task执行结果进行转换

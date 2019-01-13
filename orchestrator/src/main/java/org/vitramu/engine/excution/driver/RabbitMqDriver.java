@@ -51,8 +51,8 @@ public class RabbitMqDriver implements FlowDriver {
     /**
      * 监听rabbitmq消息。消息分为两类，表示task执行成功结束的消息和表示task执行失败的消息。
      *
-     * @param payload 消息体，Command worker执行command后产生的数据
-     * @param headers 消息头，由vitramu系统使用的元数据。包括：
+     *  消息体，Command worker执行command后产生的数据
+     *  消息头，由vitramu系统使用的元数据。包括：
      *                - flowDefinitionId 表示flow定义
      *                - flowInstanceId 表示flow实例，相当于global transaction id
      *                - taskId 表示flow中具体task的定义

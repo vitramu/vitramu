@@ -22,7 +22,6 @@ public class FlowStateMachine {
 
     public static final String EVENT_INITIALIZED = "INITIALIZED";
 
-
     public static StateMachine<String, String> newStateMachineInstance(String machineId, ConnectionFactory connectionFactory) {
         FlowStateEntryAction entryAction = new FlowStateEntryAction(connectionFactory);
         FlowStateAction stateAction = new FlowStateAction();
@@ -45,9 +44,11 @@ public class FlowStateMachine {
                     .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_OSB.getName()).state(DefinitionState.CREATE_OSB.getName(), entryAction, exitAction).end(DefinitionState.END_OSB.getName())
                     .and()
                     .withStates()
-                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_PUD.getName()).state(DefinitionState.CREATE_PUD.getName(), entryAction, exitAction).end(DefinitionState.END_PUD.getName());
-//                    .and()
-//                    .withStates().state(DefinitionState.CREATE_EW.getName(), entryAction, exitAction).state(DefinitionState.REFRESH_STATUS.getName(), entryAction, exitAction);
+                    .parent(DefinitionState.CREATE_BOOKING.getName()).initial(DefinitionState.CREATE_PUD.getName()).state(DefinitionState.CREATE_PUD.getName(), entryAction, exitAction).end(DefinitionState.END_PUD.getName())
+                    .and()
+                    .withStates().state(DefinitionState.REFRESH_STATUS.getName(), entryAction, exitAction);
+//                    .withStates().state(DefinitionState.CREATE_EW.getName(), entryAction, exitAction)
+
             builder.configureTransitions()
                     .withExternal().source(DefinitionState.REQUEST_ARRIVED.getName()).target(DefinitionState.REQUEST_SAVING.getName()).event(EVENT_INITIALIZED)
                     .and().withExternal().source(DefinitionState.REQUEST_SAVING.getName()).target(DefinitionState.CREATE_PARALLEL.getName()).event(DefinitionState.REQUEST_SAVING.getName())
