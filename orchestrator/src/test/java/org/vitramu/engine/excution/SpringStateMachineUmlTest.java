@@ -11,7 +11,7 @@ import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.config.model.StateMachineModel;
 import org.springframework.statemachine.uml.UmlStateMachineModelFactory;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.vitramu.engine.constant.DefinitionState;
+import org.vitramu.common.constant.DefinitionState;
 import org.vitramu.engine.excution.instance.FlowEngineEventListener;
 import org.vitramu.engine.excution.instance.statemachine.FlowStateMachineInterceptor;
 

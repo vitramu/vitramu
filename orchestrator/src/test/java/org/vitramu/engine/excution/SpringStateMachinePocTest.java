@@ -16,7 +16,7 @@ import org.springframework.statemachine.redis.RedisStateMachineContextRepository
 import org.springframework.statemachine.redis.RedisStateMachinePersister;
 import org.springframework.statemachine.state.State;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.vitramu.engine.constant.DefinitionState;
+import org.vitramu.common.constant.DefinitionState;
 import org.vitramu.engine.excution.instance.statemachine.FlowStateMachine;
 
 import java.util.Arrays;

@@ -1,6 +1,6 @@
-package org.vitramu.engine.definition.element;
+package org.vitramu.common.definition.element;
 
-import org.vitramu.engine.definition.AbstractDefinition;
+import org.vitramu.common.definition.AbstractDefinition;
 
 public class StartEventDefinition  extends AbstractDefinition {
 

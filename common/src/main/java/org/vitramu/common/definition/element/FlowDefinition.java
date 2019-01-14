@@ -1,10 +1,7 @@
-package org.vitramu.engine.definition.element;
+package org.vitramu.common.definition.element;
 
 import lombok.*;
-import org.vitramu.engine.definition.AbstractDefinition;
-
-import java.util.*;
-import java.util.stream.Collectors;
+import org.vitramu.common.definition.AbstractDefinition;
 
 public class FlowDefinition extends AbstractDefinition {
 

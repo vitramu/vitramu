@@ -1,4 +1,4 @@
-package org.vitramu.engine.definition;
+package org.vitramu.common.definition;
 
 public class ServiceCommandRepository {
 }

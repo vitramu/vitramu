@@ -3,19 +3,20 @@ package org.vitramu.engine.excution.instance;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.vitramu.engine.definition.FlowDefinitionRepository;
-import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.common.definition.FlowDefinitionRepository;
+import org.vitramu.common.definition.element.FlowDefinition;
 
 @Slf4j
 @Service
 public class FlowInstanceService {
-
+    private FlowEngineCache engineCache;
     private FlowEngineFactory engineFactory;
     private FlowInstanceRepository instanceRepository;
     private FlowDefinitionRepository definitionRepository;
 
-    public FlowInstanceService(FlowEngineFactory engineFactory, FlowDefinitionRepository definitionRepository, FlowInstanceRepository flowInstanceRepository) {
+    public FlowInstanceService(FlowEngineFactory engineFactory, FlowEngineCache engineCache, FlowDefinitionRepository definitionRepository, FlowInstanceRepository flowInstanceRepository) {
         this.engineFactory = engineFactory;
+        this.engineCache = engineCache;
         this.instanceRepository = flowInstanceRepository;
         this.definitionRepository = definitionRepository;
     }
@@ -33,14 +34,17 @@ public class FlowInstanceService {
                 new FlowInstance(instanceId)
         );
         instance.setDefinition(definition);
+        if (engineCache.cached(instanceId)) {
+            engineCache.restore(engine, instanceId);
+        }
         instance.setEngine(engine);
         return instance;
     }
 
     public void pause(FlowInstance instance) {
+        engineCache.save(instance.getEngine(), instance.getInstanceId());
         instanceRepository.save(instance);
         engineFactory.destory(instance.getEngine());
-//        TODO local transaction finish
     }
 
     public void finish(FlowInstance instance) {

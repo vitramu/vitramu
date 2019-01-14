@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.common.definition.element.FlowDefinition;
 
 /**
  * 封装flow definition和flow engine。当前engine是使用statemahcine实现的。

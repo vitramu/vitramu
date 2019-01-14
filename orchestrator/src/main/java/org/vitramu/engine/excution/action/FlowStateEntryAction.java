@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
-import org.vitramu.engine.definition.element.TaskDefinition;
+import org.vitramu.common.definition.element.TaskDefinition;
 
 import java.util.HashMap;
 import java.util.Map;

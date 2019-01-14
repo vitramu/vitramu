@@ -1,10 +1,10 @@
-package org.vitramu.engine.definition.element;
+package org.vitramu.common.definition.element;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.vitramu.engine.definition.AbstractDefinition;
+import org.vitramu.common.definition.AbstractDefinition;
 
 @Getter
 @ToString(callSuper = true)

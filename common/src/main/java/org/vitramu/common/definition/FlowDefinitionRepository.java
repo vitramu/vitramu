@@ -1,8 +1,7 @@
-package org.vitramu.engine.definition;
+package org.vitramu.common.definition;
 
 import org.springframework.stereotype.Repository;
-import org.vitramu.common.constant.MqConstant;
-import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.common.definition.element.FlowDefinition;
 
 
 @Repository

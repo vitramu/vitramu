@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 public class FlowEngineCache {
     public static final String INSTANCE_NAMESPACE = "ENGINE:CONTEXT:";
 
-    private final RedisTemplate<String, byte[]> redisTemplate;
     private final RedisStateMachineContextCache stateMachineContextCache;
     private final RedisStateMachinePersister<String, String> stateMachinePersister;
 
     public FlowEngineCache(RedisTemplate<String, byte[]> redisTemplate) {
-        this.redisTemplate = redisTemplate;
         this.stateMachineContextCache = new RedisStateMachineContextCache(redisTemplate);
         this.stateMachinePersister = new RedisStateMachinePersister<>(this.stateMachineContextCache);
     }
@@ -39,6 +37,10 @@ public class FlowEngineCache {
         } catch (Exception e) {
             log.error("Caching flow engine with definitionId={} and instanceId={} failed", engine.getDefinitionId(), instanceId);
         }
+    }
+
+    public boolean cached(String instanceId) {
+        return stateMachineContextCache.hasKey(buildInstanceContextKey(instanceId));
     }
 
     public static String buildInstanceContextKey(String instanceId) {

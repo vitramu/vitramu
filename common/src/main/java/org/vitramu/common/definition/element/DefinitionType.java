@@ -1,6 +1,6 @@
-package org.vitramu.engine.definition.element;
+package org.vitramu.common.definition.element;
 
-import org.vitramu.engine.definition.Type;
+import org.vitramu.common.definition.Type;
 
 import java.util.Arrays;
 import java.util.Map;

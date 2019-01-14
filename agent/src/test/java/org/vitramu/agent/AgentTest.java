@@ -11,7 +11,7 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.vitramu.engine.constant.DefinitionState;
+import org.vitramu.common.constant.DefinitionState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -100,12 +100,14 @@ public class AgentTest {
     }
 
     @Test
-    public void testTwoInstanceSwitch() {
+    public void testTwoInstanceSwitch() throws InterruptedException {
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID, m));
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildStartMessage(FLOW_INSTANCE_ID_2, m));
+        Thread.sleep(1000);
 
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
-        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID_2, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
+//        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
+//        rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID_2, "t1", DefinitionState.REQUEST_ARRIVED.getName(), m));
+//        Thread.sleep(1000);
 
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID, "t1", DefinitionState.REQUEST_SAVING.getName(), m));
         rabbitTemplate.convertAndSend(EVENT_ROUTING_KEY, new HashMap<String, Object>(), m -> buildTaskMessage(FLOW_INSTANCE_ID_2, "t1", DefinitionState.REQUEST_SAVING.getName(), m));

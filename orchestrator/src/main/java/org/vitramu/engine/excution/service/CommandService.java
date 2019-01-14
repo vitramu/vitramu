@@ -1,7 +1,7 @@
 package org.vitramu.engine.excution.service;
 
 import org.springframework.stereotype.Component;
-import org.vitramu.engine.definition.element.FlowDefinition;
+import org.vitramu.common.definition.element.FlowDefinition;
 
 @Component
 public class CommandService {

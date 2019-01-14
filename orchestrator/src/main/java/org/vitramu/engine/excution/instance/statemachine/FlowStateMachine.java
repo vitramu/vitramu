@@ -8,7 +8,7 @@ import org.springframework.statemachine.StateMachinePersist;
 import org.springframework.statemachine.config.StateMachineBuilder;
 import org.springframework.statemachine.guard.Guard;
 import org.springframework.statemachine.persist.AbstractStateMachinePersister;
-import org.vitramu.engine.constant.DefinitionState;
+import org.vitramu.common.constant.DefinitionState;
 import org.vitramu.engine.excution.action.FlowStateAction;
 import org.vitramu.engine.excution.action.FlowStateEntryAction;
 import org.vitramu.engine.excution.action.FlowStateExitAction;

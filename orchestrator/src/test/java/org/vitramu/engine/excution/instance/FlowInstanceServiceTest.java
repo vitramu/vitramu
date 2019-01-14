@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.vitramu.engine.constant.DefinitionState;
+import org.vitramu.common.constant.DefinitionState;
 import org.vitramu.engine.excution.message.StartMessage;
 import org.vitramu.engine.excution.message.TaskMessage;
 

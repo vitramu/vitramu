@@ -1,6 +1,6 @@
-package org.vitramu.engine.constant;
+package org.vitramu.common.constant;
 
-import org.vitramu.engine.definition.element.TaskDefinition;
+import org.vitramu.common.definition.element.TaskDefinition;
 
 public class DefinitionState {
     public static final TaskDefinition REQUEST_ARRIVED = new TaskDefinition("T1", "REQUEST_ARRIVED");

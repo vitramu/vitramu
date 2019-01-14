@@ -1,7 +1,7 @@
-package org.vitramu.engine.definition;
+package org.vitramu.common.definition;
 
 import lombok.*;
-import org.vitramu.engine.definition.element.DefinitionType;
+import org.vitramu.common.definition.element.DefinitionType;
 
 
 @Setter

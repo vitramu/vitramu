@@ -20,7 +20,7 @@ import org.vitramu.engine.excution.instance.FlowEngineEventListener;
 
 import java.util.Arrays;
 
-import static org.vitramu.engine.constant.DefinitionState.*;
+import static org.vitramu.common.constant.DefinitionState.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
