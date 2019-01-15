@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 @ToString
 @Getter
 public class FlowDefinitionXmlDocument {
-    public static final String DEFINITION_XML_DOCUMENT_COLLECTION_NAME = "definition";
+    public static final String DEFINITION_XML_DOCUMENT_COLLECTION_NAME = "document";
 
     @Id
     private String id;

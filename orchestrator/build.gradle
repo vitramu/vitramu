@@ -20,6 +20,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-starter:${spring_state_machine_core}"
     compile group: 'org.springframework.statemachine', name: 'spring-statemachine-redis', version: "${spring_state_machine_redis}"
 
-    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.security:spring-security-core"
+//    compile "org.springframework.boot:spring-boot-starter-security"
     compile project(":common")
 }

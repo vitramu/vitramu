@@ -10,12 +10,14 @@ import org.vitramu.common.definition.FlowDefinitionXmlDocument;
 import org.vitramu.common.definition.element.FlowDefinition;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 public class FlowDefinitionXmlParser implements FlowDefinitionParser<FlowDefinitionXmlDocument> {
 
-    public FlowDefinition parse(@NonNull FlowDefinitionXmlDocument document) {
+    @Override
+    public FlowDefinition parse(@NonNull FlowDefinitionXmlDocument document) throws IOException {
         @NonNull String xml = document.getXml();
         @Cleanup InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
         Resource resource = new InputStreamResource(is);

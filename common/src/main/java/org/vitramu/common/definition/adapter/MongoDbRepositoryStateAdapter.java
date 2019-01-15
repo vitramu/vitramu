@@ -12,7 +12,6 @@ public class MongoDbRepositoryStateAdapter extends MongoDbRepositoryState {
 
     @NonNull
     @Setter
-    @Delegate()
     private StateData<String,String> state;
     public MongoDbRepositoryStateAdapter() {
 

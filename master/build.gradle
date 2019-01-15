@@ -16,7 +16,7 @@ dependencies {
     compile "org.springframework.statemachine:spring-statemachine-core:${spring_state_machine_core}"
     compile "org.springframework.statemachine:spring-statemachine-data-mongodb:${spring_state_machine_core}"
     compile "org.springframework.statemachine:spring-statemachine-uml:${spring_state_machine_core}"
-
+    compile "org.springframework.boot:spring-boot-starter-security"
 
     compile project(":common")
 }

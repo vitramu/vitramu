@@ -2,31 +2,31 @@ package org.vitramu.master.rest;
 
 import lombok.Cleanup;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.vitramu.common.definition.FlowDefinitionRepository;
 import org.vitramu.common.definition.FlowDefinitionXmlDocument;
 import org.vitramu.common.definition.FlowDefinitionXmlDocumentRepository;
 import org.vitramu.common.definition.element.FlowDefinition;
 import org.vitramu.common.definition.parser.FlowDefinitionXmlParser;
 import org.vitramu.master.rest.exception.DocumentNotFoundException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Optional;
 
 /**
  * FlowDefinitionController contains rest api like submitting flow definition, binding task to service command and deploying flow definition.
  */
+@Slf4j
 @RestController
 @RequestMapping("/flow/definition")
 public class FlowDefinitionController {
 
 
     private FlowDefinitionXmlDocumentRepository xmlDocumentRepository = new FlowDefinitionXmlDocumentRepository();
-
+    private FlowDefinitionRepository definitionRepository = new FlowDefinitionRepository();
 
     @GetMapping(value = {"/"})
     public String listDefinition() {
@@ -79,7 +79,7 @@ public class FlowDefinitionController {
     }
 
     /**
-     * @param definitionId {String} definition id which is being deployed
+     * @param definition {String} definition id which is being deployed
      */
     @PostMapping("/{id}/deploy")
     public void deploy(@PathVariable("id") String id) throws DocumentNotFoundException {
@@ -87,8 +87,13 @@ public class FlowDefinitionController {
         docOpt.orElseThrow(() -> new DocumentNotFoundException("Document with id=" + id + "not found"));
         docOpt.ifPresent(doc -> {
             FlowDefinitionXmlParser parser = new FlowDefinitionXmlParser();
-            FlowDefinition definition = parser.parse(doc);
-
+            FlowDefinition definition = null;
+            try {
+                definition = parser.parse(doc);
+                definitionRepository.save(definition);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         });
     }
 }
