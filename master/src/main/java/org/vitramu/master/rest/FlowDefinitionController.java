@@ -1,8 +1,10 @@
 package org.vitramu.master.rest;
 
+import com.mongodb.MongoClient;
 import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,9 +26,10 @@ import java.util.Optional;
 @RequestMapping("/flow/definition")
 public class FlowDefinitionController {
 
-
-    private FlowDefinitionXmlDocumentRepository xmlDocumentRepository = new FlowDefinitionXmlDocumentRepository();
-    private FlowDefinitionRepository definitionRepository = new FlowDefinitionRepository();
+    @Autowired
+    private FlowDefinitionXmlDocumentRepository xmlDocumentRepository;
+    @Autowired
+    private FlowDefinitionRepository definitionRepository;
 
     @GetMapping(value = {"/"})
     public String listDefinition() {

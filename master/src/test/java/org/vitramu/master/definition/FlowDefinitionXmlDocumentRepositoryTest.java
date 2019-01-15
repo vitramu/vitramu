@@ -3,6 +3,7 @@ package org.vitramu.master.definition;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.vitramu.common.definition.FlowDefinitionXmlDocument;
@@ -13,7 +14,8 @@ import org.vitramu.common.definition.FlowDefinitionXmlDocumentRepository;
 public class FlowDefinitionXmlDocumentRepositoryTest {
 
     static final String DEFINITION_ID = "Test-OSB-Machine-1";
-    private FlowDefinitionXmlDocumentRepository xmlDocumentRepository= new FlowDefinitionXmlDocumentRepository();
+    @Autowired
+    private FlowDefinitionXmlDocumentRepository xmlDocumentRepository;
     @Test
     public void saveFlowDefinitionXmlDocument() {
         FlowDefinitionXmlDocument document = new FlowDefinitionXmlDocument();

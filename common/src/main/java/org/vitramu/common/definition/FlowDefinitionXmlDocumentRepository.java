@@ -1,6 +1,7 @@
 package org.vitramu.common.definition;
 
 import com.mongodb.MongoClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,8 +17,8 @@ public class FlowDefinitionXmlDocumentRepository implements CrudRepository<FlowD
     public static final String FLOW_DEFINITION_DB_NAME = "flow_definition";
     private MongoTemplate mongoTemplate;
 
-    public FlowDefinitionXmlDocumentRepository() {
-        mongoTemplate = new MongoTemplate(new MongoClient(), FLOW_DEFINITION_DB_NAME);
+    public FlowDefinitionXmlDocumentRepository(MongoClient mongo) {
+        mongoTemplate = new MongoTemplate(mongo, FLOW_DEFINITION_DB_NAME);
     }
 
     @Override

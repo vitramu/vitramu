@@ -23,8 +23,7 @@ public class FlowDefinitionXmlParser implements FlowDefinitionParser<FlowDefinit
         Resource resource = new InputStreamResource(is);
         UmlStateMachineModelFactory factory = new UmlStateMachineModelFactory(resource);
         StateMachineModel<String, String> model = factory.build();
-        FlowDefinition definition = new FlowDefinition(document.getId(), document.getDefinitionId());
-        definition.setModel(model);
+        FlowDefinition definition = new FlowDefinition(document.getId(), document.getDefinitionId(), model);
         return definition;
     }
 }

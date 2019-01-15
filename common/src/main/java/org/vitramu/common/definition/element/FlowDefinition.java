@@ -11,6 +11,9 @@ import org.springframework.statemachine.config.model.TransitionData;
 import org.vitramu.common.definition.AbstractDefinition;
 import org.vitramu.common.definition.FlowDefinitionXmlDocument;
 
+import java.util.Collection;
+import java.util.Collections;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class)
 @Document(collection = FlowDefinition.DEFINITION_COLLECTION_NAME)
@@ -20,24 +23,15 @@ public class FlowDefinition extends AbstractDefinition {
     public static final String DEFINITION_COLLECTION_NAME = "definition";
 
     @Getter
-    private StateMachineModel<String,String> model;
+    private StateMachineModel<String, String> model;
+
     @Builder
     public FlowDefinition(String id, String name) {
         super(id, name, DefinitionType.FLOW);
     }
 
-    public void setModel(@NonNull StateMachineModel<String,String> model) {
+    public FlowDefinition(String id, String name, StateMachineModel<String, String> model) {
+        this(id, name);
         this.model = model;
     }
-
-    public Iterable<StateData<String,String>> getStates() {
-        return model.getStatesData().getStateData();
-    }
-
-    public Iterable<TransitionData<String,String>> getTransitions() {
-        return model.getTransitionsData().getTransitions();
-    }
-
-
-
 }
