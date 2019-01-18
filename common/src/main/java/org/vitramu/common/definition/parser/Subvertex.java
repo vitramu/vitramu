@@ -1,8 +1,7 @@
 package org.vitramu.common.definition.parser;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
+import java.util.Collection;
 
 @XmlType()
 @XmlRootElement(name = "subvertex", namespace = Model.NS_UML)
@@ -12,5 +11,10 @@ public class Subvertex {
 
     @XmlAttribute(namespace = Model.NS_XMI)
     private String type;
+
+    @XmlElements({
+            @XmlElement(name = "region")
+    })
+    private Collection<Region> regions;
 
 }

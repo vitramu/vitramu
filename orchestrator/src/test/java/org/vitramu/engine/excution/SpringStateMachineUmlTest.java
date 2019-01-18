@@ -31,8 +31,6 @@ public class SpringStateMachineUmlTest {
         UmlStateMachineModelFactory modelFactory = new UmlStateMachineModelFactory(osbMachineUml);
         StateMachineModel<String, String> osbModel = modelFactory.build(MACHINE_ID);
 
-        ObjectStateMachineFactory<String, String> factory = new ObjectStateMachineFactory<>(osbModel, modelFactory);
-
         StateMachineBuilder.Builder<String, String> builder = StateMachineBuilder.builder();
         builder.configureModel().withModel().factory(modelFactory);
         builder.configureConfiguration().withConfiguration().machineId(MACHINE_ID);
