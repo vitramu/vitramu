@@ -2,6 +2,7 @@ package org.vitramu.engine.excution.instance.statemachine;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
@@ -99,5 +100,10 @@ public class FlowStateMachine {
         public StateMachineContext<T, String> read(String contextObj) throws Exception {
             return contexts.get(contextObj);
         }
+    }
+
+
+    public FlowStateMachine() {
+        super();
     }
 }
