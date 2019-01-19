@@ -14,6 +14,7 @@ import org.vitramu.common.definition.FlowDefinitionXmlDocumentRepository;
 import org.vitramu.common.definition.element.FlowDefinition;
 import org.vitramu.common.definition.parser.FlowDefinitionXmlParser;
 import org.vitramu.master.rest.exception.DocumentNotFoundException;
+import org.vitramu.master.rest.vo.BindingVo;
 
 import java.io.*;
 import java.util.Optional;
@@ -98,5 +99,10 @@ public class FlowDefinitionController {
                 e.printStackTrace();
             }
         });
+    }
+
+    @PostMapping("/{id}/binding")
+    public void binding(@PathVariable("id") String id, @RequestBody BindingVo binding) {
+
     }
 }

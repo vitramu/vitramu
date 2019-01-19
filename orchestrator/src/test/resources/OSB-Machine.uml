@@ -8,7 +8,7 @@
       <transition xmi:type="uml:Transition" xmi:id="_vSlXcBaHEemdVtgy2H6EVw" name="REQUEST_SAVING" source="_FF3TABaHEemdVtgy2H6EVw" target="_ryD3ABaHEemdVtgy2H6EVw"/>
       <transition xmi:type="uml:Transition" xmi:id="__Y9lIBaHEemdVtgy2H6EVw" source="_ryD3ABaHEemdVtgy2H6EVw" target="_cYOCYBaLEemdVtgy2H6EVw"/>
       <transition xmi:type="uml:Transition" xmi:id="_Bu3QEBaJEemdVtgy2H6EVw" source="_W6wbgBaIEemdVtgy2H6EVw" target="_zwTqgBaIEemdVtgy2H6EVw"/>
-      <transition xmi:type="uml:Transition" xmi:id="_GvSdABaJEemdVtgy2H6EVw" source="_zwTqgBaIEemdVtgy2H6EVw" target="_Fm6fsBaJEemdVtgy2H6EVw"/>
+      <transition xmi:type="uml:Transition" xmi:id="_GvSdABaJEemdVtgy2H6EVw" name="REFRESH_STATUS" source="_zwTqgBaIEemdVtgy2H6EVw" target="_Fm6fsBaJEemdVtgy2H6EVw"/>
       <transition xmi:type="uml:Transition" xmi:id="_NqxocBaJEemdVtgy2H6EVw" name="INITIALIZED" source="_CZ-UgBaHEemdVtgy2H6EVw" target="_FF3TABaHEemdVtgy2H6EVw"/>
       <transition xmi:type="uml:Transition" xmi:id="_EgxsIBaLEemdVtgy2H6EVw" source="_ryD3ABaHEemdVtgy2H6EVw" target="_aantQBaLEemdVtgy2H6EVw"/>
       <subvertex xmi:type="uml:Pseudostate" xmi:id="_CZ-UgBaHEemdVtgy2H6EVw" name="REQUEST_ARRIVED"/>
