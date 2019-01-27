@@ -1,21 +1,20 @@
 package org.vitramu.master.rest;
 
-import com.mongodb.MongoClient;
 import lombok.Cleanup;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.vitramu.common.definition.FlowDefinitionRepository;
-import org.vitramu.common.definition.FlowDefinitionXmlDocument;
-import org.vitramu.common.definition.FlowDefinitionXmlDocumentRepository;
+import org.vitramu.common.definition.xml.FlowDefinitionXmlDocument;
+import org.vitramu.common.definition.xml.FlowDefinitionXmlDocumentRepository;
 import org.vitramu.common.definition.element.FlowDefinition;
-import org.vitramu.common.definition.parser.FlowDefinitionXmlParser;
+import org.vitramu.common.definition.xml.FlowDefinitionXmlParser;
 import org.vitramu.master.rest.exception.DocumentNotFoundException;
 import org.vitramu.master.rest.vo.BindingVo;
 
+import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.util.Optional;
 
@@ -37,11 +36,11 @@ public class FlowDefinitionController {
         return xmlDocumentRepository.findAllId().toString();
     }
 
-    @GetMapping(value = ("/{id}"), produces = {"text/xml"})
+    @GetMapping(value = ("/{id}"), produces = {"text/content"})
     public String getDefinition(@PathVariable("id") String id) throws Exception {
         Optional<FlowDefinitionXmlDocument> docOpt = xmlDocumentRepository.findById(id);
         docOpt.orElseThrow(() -> new DocumentNotFoundException("document with id=" + id + " not exist"));
-        return docOpt.get().getXml();
+        return docOpt.get().getContent();
     }
 
     /**
@@ -67,7 +66,7 @@ public class FlowDefinitionController {
         Optional<FlowDefinitionXmlDocument> docOpt = xmlDocumentRepository.findById(id);
         docOpt.orElseThrow(() -> new DocumentNotFoundException("document with id=" + id + " not exist"));
         docOpt.ifPresent(doc -> {
-            doc.setXml(xml);
+            doc.setContent(xml);
             xmlDocumentRepository.save(doc);
         });
     }
@@ -83,7 +82,7 @@ public class FlowDefinitionController {
     }
 
     /**
-     * @param definition {String} definition id which is being deployed
+     * @param id {String} definition id which is being deployed
      */
     @PostMapping("/{id}/deploy")
     public void deploy(@PathVariable("id") String id) throws DocumentNotFoundException {
@@ -95,7 +94,7 @@ public class FlowDefinitionController {
             try {
                 definition = parser.parse(doc);
                 definitionRepository.save(definition);
-            } catch (IOException e) {
+            } catch (JAXBException e) {
                 e.printStackTrace();
             }
         });

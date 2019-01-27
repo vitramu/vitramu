@@ -1,6 +1,7 @@
 package org.vitramu.engine.excution.instance;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ public class FlowEngineFactory {
     private Map<String, List<FlowEngine>> engines = new HashMap<>();
     private StateMachineFactory<String, String> stateMachineFactory;
 
+    @Autowired
     public FlowEngineFactory(StateMachineFactory<String, String> stateMachineFactory) {
         this.stateMachineFactory = stateMachineFactory;
     }

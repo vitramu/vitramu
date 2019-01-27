@@ -2,11 +2,15 @@ package org.vitramu.agent;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@SpringBootApplication
+@EnableDiscoveryClient
+@SpringBootApplication(scanBasePackages = {"org.vitramu.agent.rest"})
 public class Application {
+
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
 }

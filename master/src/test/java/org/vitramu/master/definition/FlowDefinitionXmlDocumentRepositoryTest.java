@@ -6,8 +6,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.vitramu.common.definition.FlowDefinitionXmlDocument;
-import org.vitramu.common.definition.FlowDefinitionXmlDocumentRepository;
+import org.vitramu.common.definition.xml.FlowDefinitionXmlDocument;
+import org.vitramu.common.definition.xml.FlowDefinitionXmlDocumentRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -21,7 +21,7 @@ public class FlowDefinitionXmlDocumentRepositoryTest {
         FlowDefinitionXmlDocument document = new FlowDefinitionXmlDocument();
         document.setDefinitionId(DEFINITION_ID);
 
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+        String xml = "<?content version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<uml:Model xmi:version=\"20131001\" xmlns:xmi=\"http://www.omg.org/spec/XMI/20131001\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" xmlns:uml=\"http://www.eclipse.org/uml2/5.0.0/UML\" xmi:id=\"_AY_7QBaHEemdVtgy2H6EVw\" name=\"OSB-Machine\">\n" +
                 "  <packageImport xmi:type=\"uml:PackageImport\" xmi:id=\"_AkHmIBaHEemdVtgy2H6EVw\">\n" +
                 "    <importedPackage xmi:type=\"uml:Model\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0\"/>\n" +
@@ -67,7 +67,7 @@ public class FlowDefinitionXmlDocumentRepositoryTest {
                 "    <appliedProfile xmi:type=\"uml:Profile\" href=\"pathmap://PAPYRUS_ACTIONLANGUAGE_PROFILE/ActionLanguage-Profile.profile.uml#ActionLanguage\"/>\n" +
                 "  </profileApplication>\n" +
                 "</uml:Model>\n";
-        document.setXml(xml);
+        document.setContent(xml);
         xmlDocumentRepository.save(document);
     }
 

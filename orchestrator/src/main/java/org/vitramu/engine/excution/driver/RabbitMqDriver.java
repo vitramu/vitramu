@@ -72,11 +72,13 @@ public class RabbitMqDriver implements FlowDriver {
                 log.error("unsupported message content type");
             }
             content = new JsonParser().parse(payload);
-            log.info("receive task message: {}", payload);
             String flowDefinitionId = (String) headers.get("flowDefinitionId");
             String flowInstanceId = (String) headers.get("flowInstanceId");
             String serviceName = (String) headers.get("serviceName");
             String serviceInstanceId = (String) headers.get("serviceInstanceId");
+            log.info("===========================================");
+            log.info("Machine {} receives message", flowDefinitionId);
+
             FlowMessage flowMessage = new FlowMessage((String) headers.get("flowDefinitionId"),
                     (String) headers.get("flowInstanceId"),
                     (String) headers.get("serviceName"),

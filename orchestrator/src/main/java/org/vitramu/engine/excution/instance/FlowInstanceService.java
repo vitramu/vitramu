@@ -2,6 +2,7 @@ package org.vitramu.engine.excution.instance;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vitramu.common.definition.FlowDefinitionRepository;
 import org.vitramu.common.definition.element.FlowDefinition;
@@ -14,6 +15,7 @@ public class FlowInstanceService {
     private FlowInstanceRepository instanceRepository;
     private FlowDefinitionRepository definitionRepository;
 
+    @Autowired
     public FlowInstanceService(FlowEngineFactory engineFactory, FlowEngineCache engineCache, FlowDefinitionRepository definitionRepository, FlowInstanceRepository flowInstanceRepository) {
         this.engineFactory = engineFactory;
         this.engineCache = engineCache;

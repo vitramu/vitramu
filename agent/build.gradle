@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id "eclipse"
+    id "org.springframework.boot"
 }
 
 
@@ -15,6 +16,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-json'
     compile 'org.springframework.boot:spring-boot-starter-web-services'
     compile 'org.springframework.boot:spring-boot-starter-web'
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 
